@@ -1,0 +1,23 @@
+.home-container {
+  display: flex;
+  justify-content: space-evenly;
+  flex-direction: column;
+  align-items: center;
+  height: 70vh;
+}
+.home-container .logo {
+  width: clamp(300px, 50vw, 600px);
+  height: auto;
+}
+.home-container .buttons-container {
+  display: flex;
+  justify-content: center;
+  column-gap: 5rem;
+  row-gap: 2rem;
+  flex-wrap: wrap;
+}
+.home-container .buttons-container * {
+  width: 13rem;
+}
+
+/*# sourceMappingURL=home.component.css.map */

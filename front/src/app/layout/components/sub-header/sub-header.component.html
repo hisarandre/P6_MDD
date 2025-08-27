@@ -1,0 +1,20 @@
+<div class="w-full flex items-center p-2 space-x-2">
+  <!-- Back button -->
+  <button
+    mat-icon-button
+    (click)="back.emit()"
+    aria-label="Go back"
+    class="flex items-center justify-center"
+  >
+    <mat-icon>arrow_back</mat-icon>
+  </button>
+
+  <!-- Title -->
+  <h1
+    class="text-lg font-semibold leading-none pt-3"
+    [class.text-left]="titleAlign === 'left'"
+    [class.text-center]="titleAlign === 'center'"
+  >
+    {{ title }}
+  </h1>
+</div>

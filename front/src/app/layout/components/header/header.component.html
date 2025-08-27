@@ -1,0 +1,68 @@
+<mat-sidenav-container class="h-screen bg-white">
+
+  <!-- Mobile Sidenav -->
+  <mat-sidenav
+    #sidenav
+    mode="over"
+    position="end"
+    [opened]="isSidenavOpen"
+    (closedStart)="closeSidenav()"
+    *ngIf="showNavbar && isMobile && (isLoggedIn$ | async)"
+    class="w-64 bg-white shadow-lg p-4"
+  >
+    <mat-nav-list class="flex flex-col space-y-2">
+      <a mat-list-item (click)="logout(); closeSidenav()" class="hover:text-red-500 font-medium">
+        Se déconnecter
+      </a>
+      <a mat-list-item routerLink="topics/posts" routerLinkActive="active-link" (click)="closeSidenav()" class="hover:text-blue-500 font-medium">
+        Articles
+      </a>
+      <a mat-list-item routerLink="topics" routerLinkActive="active-link" (click)="closeSidenav()" class="hover:text-blue-500 font-medium">
+        Thèmes
+      </a>
+      <a mat-list-item routerLink="me" routerLinkActive="active-link" (click)="closeSidenav()" class="hover:text-blue-500 font-medium">
+        Mon compte
+      </a>
+    </mat-nav-list>
+  </mat-sidenav>
+
+  <!-- Main Content -->
+  <mat-sidenav-content class="flex flex-col">
+
+    <!-- Toolbar / Navbar -->
+    <mat-toolbar
+      *ngIf="showNavbar"
+      class="border-b border-gray-300 flex justify-between items-center px-4 h-14 z-10 sticky top-0"
+    >
+      <!-- Logo -->
+      <div class="navbar-brand flex items-center h-full cursor-pointer" routerLink="/">
+        <img src="../../../../assets/logo_p6.png" alt="Logo MDD" class="h-full w-auto object-contain"/>
+      </div>
+
+      <!-- Desktop navigation -->
+      <div class="hidden md:flex space-x-4 items-center">
+        <ng-container *ngIf="isLoggedIn$ | async">
+          <a mat-button (click)="logout()" class="text-red-500 font-medium">Se déconnecter</a>
+          <a mat-button routerLink="topics/posts" routerLinkActive="active-link" class="text-gray-700 hover:text-blue-500 font-medium">Articles</a>
+          <a mat-button routerLink="topics" routerLinkActive="active-link" class="text-gray-700 hover:text-blue-500 font-medium">Thèmes</a>
+          <a routerLink="me" routerLinkActive="active-link">
+            <button mat-icon-button class="text-gray-700 hover:text-blue-500">
+              <mat-icon>person</mat-icon>
+            </button>
+          </a>
+        </ng-container>
+      </div>
+
+      <!-- Mobile menu button -->
+      <button mat-icon-button class="md:hidden text-gray-700" *ngIf="isMobile && (isLoggedIn$ | async)" (click)="toggleSidenav()">
+        <mat-icon>{{ isSidenavOpen ? 'close' : 'menu' }}</mat-icon>
+      </button>
+    </mat-toolbar>
+
+    <!-- Page content -->
+    <div class="flex-1 p-4 bg-gray-50">
+      <router-outlet></router-outlet>
+    </div>
+
+  </mat-sidenav-content>
+</mat-sidenav-container>

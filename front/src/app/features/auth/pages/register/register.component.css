@@ -1,0 +1,59 @@
+.register-form-container {
+  display: flex;
+  min-height: 80vh;
+  justify-content: center;
+}
+.register-form-container .logo {
+  display: none;
+}
+.register-form-container .back-button {
+  position: absolute;
+  top: 20px;
+  left: 20px;
+  margin-top: 10px;
+}
+.register-form-container .register-form {
+  width: 35%;
+  margin: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+}
+.register-form-container .register-form .title {
+  text-align: center;
+  font-size: 24px;
+  font-weight: 400;
+  margin: 0;
+}
+.register-form-container .register-form .form-field {
+  width: 100%;
+}
+.register-form-container .register-form .register-button {
+  margin: auto;
+}
+.register-form-container .register-form .error-messages {
+  margin: auto;
+  text-align: center;
+}
+
+@media screen and (max-width: 768px) {
+  .register-form-container {
+    flex-wrap: wrap;
+    padding: 20px;
+    min-height: 80vh;
+  }
+  .register-form-container .logo {
+    display: block;
+    width: clamp(300px, 50vw, 600px);
+  }
+  .register-form-container .back-button {
+    top: 10px;
+    left: 10px;
+  }
+  .register-form-container .register-form {
+    width: 90%;
+    gap: 1.3rem;
+  }
+}
+
+/*# sourceMappingURL=register.component.css.map */

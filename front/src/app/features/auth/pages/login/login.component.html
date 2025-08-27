@@ -1,0 +1,51 @@
+<!-- Back button -->
+<app-sub-header (back)="goBack()"></app-sub-header>
+
+<section class="min-h-[75vh] flex flex-col items-center justify-center relative p-4">
+
+  <img
+    src="assets/logo_p6.png"
+    alt="Logo MDD"
+    class="block md:hidden w-[min(50vw,600px)] object-contain"
+    routerLink="/"
+  />
+
+  <form [formGroup]="loginForm"
+        (ngSubmit)="onLogin()"
+        class="w-full max-w-md flex flex-col gap-4">
+
+    <h1 class="text-2xl font-semibold text-center">Connexion</h1>
+
+    <!-- Email -->
+    <mat-form-field appearance="outline">
+      <mat-label>Adresse e-mail</mat-label>
+      <input matInput type="email" formControlName="email" [readonly]="isLoading" />
+      <mat-error *ngIf="email && email?.touched && email.hasError('required')">L'adresse e-mail est requise</mat-error>
+      <mat-error *ngIf="email && email?.touched && email.hasError('email')">Adresse e-mail invalide</mat-error>
+    </mat-form-field>
+
+    <!-- Password -->
+    <mat-form-field appearance="outline">
+      <mat-label>Mot de passe</mat-label>
+      <input matInput type="password" formControlName="password" [readonly]="isLoading" />
+      <mat-error *ngIf="password && password?.touched && password.hasError('required')">Le mot de passe est requis</mat-error>
+    </mat-form-field>
+
+    <!-- Submit -->
+    <button
+      mat-raised-button
+      class="mt-8 w-auto self-center"
+      color="primary"
+      type="submit"
+      [disabled]="loginForm.invalid || isLoading"
+    >
+      {{ loadingMessage }}
+    </button>
+
+    <!-- Global errors -->
+    <div class="text-red-500 text-sm text-center mt-2" *ngIf="hasLoginFailed">
+      Erreur de connexion. Vérifiez vos identifiants.
+    </div>
+
+  </form>
+</section>
