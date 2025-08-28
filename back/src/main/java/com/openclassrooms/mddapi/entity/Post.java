@@ -1,8 +1,6 @@
 package com.openclassrooms.mddapi.entity;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
-import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 import lombok.Getter;
@@ -15,29 +13,29 @@ import java.time.LocalDateTime;
 @Getter
 @Setter
 @Entity
-@Table(name = "users")
-public class User {
+@Table(name = "posts")
+public class Post {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @NotBlank
-    @Email
-    @Size(max = 100)
-    @Column(nullable = false, unique = true)
-    private String email;
-
-    @NotBlank
-    @Size(max = 50)
-    @Column(nullable = false)
-    private String username;
-
-    @NotBlank
     @Size(max = 255)
     @Column(nullable = false)
-    @JsonIgnore
-    private String password;
+    private String title;
+
+    @NotBlank
+    @Column(nullable = false, columnDefinition = "TEXT")
+    private String content;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "author_id", nullable = false)
+    private User author;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "subject_id", nullable = false)
+    private Subject subject;
 
     @CreationTimestamp
     @Column(updatable = false, nullable = false)
@@ -46,6 +44,4 @@ public class User {
     @UpdateTimestamp
     @Column(nullable = false)
     private LocalDateTime updatedAt;
-
-
 }

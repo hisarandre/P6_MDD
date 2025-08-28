@@ -1,5 +1,6 @@
 package com.openclassrooms.mddapi.repository;
 
+import com.openclassrooms.mddapi.entity.Post;
 import com.openclassrooms.mddapi.entity.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
@@ -7,8 +8,6 @@ import org.springframework.stereotype.Repository;
 import java.util.Optional;
 
 @Repository
-public interface UserRepository extends JpaRepository<User, Long> {
-    Optional<User> findByEmail(String email);
-    boolean existsByEmail(String email);
-    boolean existsByUsername(String username);
+public interface PostRepository extends JpaRepository<Post, Integer> {
+
 }

@@ -24,7 +24,7 @@ public class UserService {
      * @return the {@link User} entity
      * @throws UserNotFoundException if no user exists with the provided ID
      */
-    public User getUserById(Integer id) {
+    public User getUserById(Long id) {
         return userRepository.findById(id)
                 .orElseThrow(() -> UserNotFoundException.byId(id));
     }

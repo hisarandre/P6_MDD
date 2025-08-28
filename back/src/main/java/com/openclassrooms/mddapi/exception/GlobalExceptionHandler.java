@@ -114,4 +114,32 @@ public class GlobalExceptionHandler {
         );
         return new ResponseEntity<>(errorResponse, HttpStatus.FORBIDDEN);
     }
+
+    @ExceptionHandler(IllegalStateException.class)
+    public ResponseEntity<ErrorResponse> handleIllegalStateException(IllegalStateException ex) {
+        log.warn("Illegal state: {}", ex.getMessage());
+
+        ErrorResponse errorResponse = new ErrorResponse(
+                "ILLEGAL_STATE",
+                ex.getMessage(),
+                HttpStatus.CONFLICT.value()
+        );
+
+        return new ResponseEntity<>(errorResponse, HttpStatus.CONFLICT);
+    }
+
+    @ExceptionHandler(IllegalArgumentException.class)
+    public ResponseEntity<ErrorResponse> handleIllegalArgumentException(IllegalArgumentException ex) {
+        log.warn("Illegal argument: {}", ex.getMessage());
+
+        HttpStatus status = HttpStatus.NOT_FOUND;
+        ErrorResponse errorResponse = new ErrorResponse(
+                "NOT_FOUND",
+                ex.getMessage(),
+                status.value()
+        );
+
+        return ResponseEntity.status(status).body(errorResponse);
+    }
+
 }

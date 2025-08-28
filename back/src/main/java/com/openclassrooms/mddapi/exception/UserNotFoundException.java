@@ -10,7 +10,7 @@ public class UserNotFoundException extends RuntimeException {
         return new UserNotFoundException("User with email " + email + " not found");
     }
 
-    public static UserNotFoundException byId(Integer id) {
+    public static UserNotFoundException byId(Long id) {
         return new UserNotFoundException("User with id " + id + " not found");
     }
 

@@ -4,8 +4,6 @@ package com.openclassrooms.mddapi.controller;
 import com.openclassrooms.mddapi.dto.auth.AuthResponseDto;
 import com.openclassrooms.mddapi.dto.auth.LoginRequestDto;
 import com.openclassrooms.mddapi.dto.auth.RegisterRequestDto;
-import com.openclassrooms.mddapi.dto.user.UserResponseDto;
-import com.openclassrooms.mddapi.entity.User;
 import com.openclassrooms.mddapi.mapper.UserMapper;
 import com.openclassrooms.mddapi.service.AuthService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -88,30 +86,4 @@ public class AuthController {
         return ResponseEntity.ok(new AuthResponseDto(token));
     }
 
-    @GetMapping("/me")
-    @Operation(
-            summary = "Get current user profile",
-            description = "Retrieve the profile information of the currently authenticated user."
-    )
-    @ApiResponses(value = {
-            @ApiResponse(responseCode = "200",
-                    description = "User profile retrieved successfully",
-                    content = @Content(
-                            mediaType = "application/json",
-                            schema = @Schema(implementation = UserResponseDto.class))
-            ),
-            @ApiResponse(responseCode = "401",
-                    description = "Unauthorized - Missing or invalid JWT token",
-                    content = @Content),
-            @ApiResponse(responseCode = "403",
-                    description = "Forbidden - Token is expired or lacks required scope",
-                    content = @Content)
-    })
-    @SecurityRequirement(name = "Bearer Authentication")
-    public ResponseEntity<UserResponseDto> me(
-            @Parameter(hidden = true) JwtAuthenticationToken jwtAuthenticationToken
-    ) {
-        User user = authService.getAuthenticatedUser(jwtAuthenticationToken);
-        return ResponseEntity.ok(userMapper.toUserResponseDto(user));
-    }
 }
