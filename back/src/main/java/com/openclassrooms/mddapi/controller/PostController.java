@@ -56,7 +56,7 @@ public class PostController {
     ) {
         User author = authService.getAuthenticatedUser(jwtAuthenticationToken);
 
-        postService.createPost(postRequestDto, author.getId());
+        postService.createPost(postRequestDto, author);
 
         return ResponseEntity.status(HttpStatus.OK).build();
     }

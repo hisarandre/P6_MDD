@@ -45,10 +45,7 @@ public class PostService {
                 .orElseThrow(() -> new IllegalArgumentException("Post not found"));
     }
 
-    public void createPost(PostRequestDto postRequestDto, Long authorId) {
-        User author = userRepository.findById(authorId)
-                .orElseThrow(() -> new IllegalArgumentException("User not found with id: " + authorId));
-
+    public void createPost(PostRequestDto postRequestDto, User author) {
         // Get the subject
         Subject subject = subjectRepository.findById(postRequestDto.getSubjectId())
                 .orElseThrow(() -> new IllegalArgumentException("Subject not found with id: " + postRequestDto.getSubjectId()));

@@ -21,11 +21,11 @@ public class Comment {
 
     @NotBlank
     @Column(columnDefinition = "TEXT", nullable = false)
-    private String description;
+    private String content;
 
     @ManyToOne(optional = false)
-    @JoinColumn(name = "user_id", nullable = false)
-    private User user;
+    @JoinColumn(name = "author_id", nullable = false)
+    private User author;
 
     @ManyToOne(optional = false)
     @JoinColumn(name = "post_id", nullable = false)
