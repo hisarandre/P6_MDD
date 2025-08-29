@@ -67,15 +67,18 @@ public class PostController {
             )
     })
     public ResponseEntity<List<PostResponseDto>> getSubscribedPosts(
-            @Parameter(hidden = true) JwtAuthenticationToken jwtAuthenticationToken
+            @Parameter(hidden = true) JwtAuthenticationToken jwtAuthenticationToken,
+            @Parameter(
+                    description = "Sort order for posts by creation date. 'desc' for newest first, 'asc' for oldest first",
+                    example = "desc",
+                    schema = @Schema(allowableValues = {"asc", "desc"})
+            )
+            @RequestParam(defaultValue = "desc") String sort
     ) {
-        log.info("Retrieving subscribed posts for authenticated user");
-
         User user = authService.getAuthenticatedUser(jwtAuthenticationToken);
-        List<Post> posts = postService.getSubscribedPosts(user);
-        List<PostResponseDto> postDtos = postMapper.toPostResponseDtoList(posts);
 
-        log.info("Retrieved {} subscribed posts for user: {}", postDtos.size(), user.getEmail());
+        List<Post> posts = postService.getSubscribedPosts(user, sort);
+        List<PostResponseDto> postDtos = postMapper.toPostResponseDtoList(posts);
 
         return ResponseEntity.ok(postDtos);
     }

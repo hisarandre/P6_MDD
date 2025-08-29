@@ -32,17 +32,30 @@ public class PostService {
      * Gets all posts from subjects the user is subscribed to.
      *
      * @param user the authenticated user
+     * @param sortOrder "desc" for newest first, "asc" for oldest first
      * @return list of posts from subscribed subjects
      */
     @Transactional(readOnly = true)
-    public List<Post> getSubscribedPosts(User user) {
+    public List<Post> getSubscribedPosts(User user, String sortOrder) {
         List<Subscription> userSubscriptions = subscriptionRepository.findByUserId(user.getId());
+
+        if (userSubscriptions.isEmpty()) {
+            return List.of();
+        }
 
         List<Subject> subscribedSubjects = userSubscriptions.stream()
                 .map(Subscription::getSubject)
                 .toList();
 
-        return postRepository.findBySubjectIn(subscribedSubjects);
+        if (subscribedSubjects.isEmpty()) {
+            return List.of();
+        }
+
+        if ("asc".equals(sortOrder)) {
+            return postRepository.findBySubjectInOrderByCreatedAtAsc(subscribedSubjects);
+        } else {
+            return postRepository.findBySubjectInOrderByCreatedAtDesc(subscribedSubjects);
+        }
     }
 
     /**
