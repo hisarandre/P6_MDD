@@ -1,6 +1,7 @@
 package com.openclassrooms.mddapi.dto.auth;
 
 import io.swagger.v3.oas.annotations.media.Schema;
+import jakarta.validation.constraints.Pattern;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -45,5 +46,8 @@ public class RegisterRequestDto {
     )
     @NotBlank
     @Size(min = 6, max = 255)
+    @Pattern(regexp = "^(?=.*\\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[^\\w\\s]).*$",
+            message = "The password must contain at least 8 characters, including a digit, a lowercase letter," +
+                    " an uppercase letter, and a special character.")
     private String password;
 }

@@ -1,7 +1,9 @@
 package com.openclassrooms.mddapi.exception;
 
 import com.openclassrooms.mddapi.dto.ErrorResponse;
+import com.openclassrooms.mddapi.dto.ErrorValidationResponse;
 import jakarta.persistence.EntityNotFoundException;
+import org.springframework.context.MessageSourceResolvable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.BadCredentialsException;
@@ -14,11 +16,47 @@ import java.nio.file.AccessDeniedException;
 import java.util.HashMap;
 import java.util.Map;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.web.method.annotation.HandlerMethodValidationException;
 import org.springframework.web.multipart.MaxUploadSizeExceededException;
 
 @Slf4j
 @RestControllerAdvice
 public class GlobalExceptionHandler {
+
+    @ExceptionHandler(HandlerMethodValidationException.class)
+    public ResponseEntity<ErrorValidationResponse> handleHandlerMethodValidationException(
+            HandlerMethodValidationException ex) {
+
+        Map<String, String> errors = new HashMap<>();
+
+        ex.getAllErrors().forEach(error -> {
+            String fieldName = extractFieldName(error);
+            errors.put(fieldName, error.getDefaultMessage());
+        });
+
+        log.warn("Handler method validation error: {}", errors);
+
+        ErrorValidationResponse errorValidationResponse = new ErrorValidationResponse(
+                "VALIDATION_ERROR",
+                "Validation failed",
+                HttpStatus.BAD_REQUEST.value(),
+                errors
+        );
+
+        return new ResponseEntity<>(errorValidationResponse, HttpStatus.BAD_REQUEST);
+    }
+
+    private String extractFieldName(MessageSourceResolvable error) {
+        String[] codes = error.getCodes();
+        if (codes != null && codes.length > 0) {
+            String code = codes[0];
+            int lastDot = code.lastIndexOf('.');
+            if (lastDot > 0 && lastDot < code.length() - 1) {
+                return code.substring(lastDot + 1);
+            }
+        }
+        return "field";
+    }
 
     @ExceptionHandler(UserAlreadyExistsException.class)
     @ResponseStatus(HttpStatus.CONFLICT)

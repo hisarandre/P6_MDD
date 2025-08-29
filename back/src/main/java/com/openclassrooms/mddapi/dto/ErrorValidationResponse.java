@@ -5,22 +5,23 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.Map;
 
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class ErrorResponse {
+public class ErrorValidationResponse {
     private String code;
     private String message;
     private int status;
     private LocalDateTime timestamp;
+    private Map<String, String> errors;
 
-    public ErrorResponse(String code, String message, int status) {
+    public ErrorValidationResponse(String code, String message, int status, Map<String, String> errors) {
         this.code = code;
         this.message = message;
         this.status = status;
         this.timestamp = LocalDateTime.now();
+        this.errors = errors;
     }
 }
