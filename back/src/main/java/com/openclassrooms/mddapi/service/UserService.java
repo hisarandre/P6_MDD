@@ -36,6 +36,15 @@ public class UserService {
                 .orElseThrow(() -> UserNotFoundException.byId(id));
     }
 
+    /**
+     * Updates a user's profile information.
+     * Only updates fields that are provided and different from current values.
+     *
+     * @param updateRequest the update data
+     * @param existingUser the current user entity
+     * @return the updated user entity
+     * @throws UserAlreadyExistsException if username or email already exists
+     */
     @Transactional
     public User updateUser(UserUpdateRequestDto updateRequest, User existingUser) {
         // Check if username is already taken

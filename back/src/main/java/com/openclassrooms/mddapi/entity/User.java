@@ -7,6 +7,7 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.ToString;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
@@ -16,25 +17,26 @@ import java.time.LocalDateTime;
 @Setter
 @Entity
 @Table(name = "users")
+@ToString(exclude = {"password"})
 public class User {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @NotBlank
-    @Email
-    @Size(max = 100)
-    @Column(nullable = false, unique = true)
+    @NotBlank(message = "Email cannot be blank")
+    @Email(message = "Email must be valid")
+    @Size(max = 100, message = "Email must not exceed 100 characters")
+    @Column(nullable = false, unique = true, length = 100)
     private String email;
 
-    @NotBlank
-    @Size(max = 50)
-    @Column(nullable = false)
+    @NotBlank(message = "Username cannot be blank")
+    @Size(min = 3, max = 50, message = "Username must be between 3 and 50 characters")
+    @Column(nullable = false, unique = true, length = 50)
     private String username;
 
-    @NotBlank
-    @Size(max = 255)
+    @NotBlank(message = "Password cannot be blank")
+    @Size(max = 255, message = "Password must not exceed 255 characters")
     @Column(nullable = false)
     @JsonIgnore
     private String password;
