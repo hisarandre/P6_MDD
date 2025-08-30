@@ -24,9 +24,6 @@ import { SubHeaderComponent } from '../../../../layout/components/sub-header/sub
   imports: [
     ReactiveFormsModule,
     NgIf,
-    AsyncPipe,
-    RouterLink,
-    RouterOutlet,
     MatFormFieldModule,
     MatInputModule,
     MatIconModule,

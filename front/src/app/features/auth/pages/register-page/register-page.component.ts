@@ -28,9 +28,7 @@ import {passwordValidator} from "../../../../shared/validators/password.validato
   imports: [
     ReactiveFormsModule,
     NgIf,
-    AsyncPipe,
     RouterLink,
-    RouterOutlet,
     MatFormFieldModule,
     MatInputModule,
     MatIconModule,
