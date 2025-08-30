@@ -1,6 +1,10 @@
 import { Component, OnInit } from '@angular/core';
-import { RouterLink } from '@angular/router';
+import {Router, RouterLink} from '@angular/router';
 import {MatButton} from "@angular/material/button";
+import {SubjectsService} from "../../../subjects/services/subjects.service";
+import {SessionService} from "../../../../core/services/session.service";
+import {catchError, of} from "rxjs";
+import {AuthService} from "../../services/auth.service";
 
 @Component({
     selector: 'app-home-page',

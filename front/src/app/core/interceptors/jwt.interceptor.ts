@@ -6,7 +6,6 @@ import { Observable } from "rxjs";
 export class JwtInterceptor implements HttpInterceptor {
   intercept<T>(request: HttpRequest<T>, next: HttpHandler): Observable<HttpEvent<T>> {
     const token = localStorage.getItem('token');
-    console.log('Intercepted request', request.url, 'Token:', localStorage.getItem('token'));
 
     if (token) {
       request = request.clone({
