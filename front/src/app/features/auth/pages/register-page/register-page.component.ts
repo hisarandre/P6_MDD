@@ -18,6 +18,7 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatButtonModule } from '@angular/material/button';
 import {SubHeaderComponent} from "../../../../layout/components/sub-header/sub-header.component";
+import {passwordValidator} from "../../../../shared/validators/password.validators";
 
 @Component({
   selector: 'app-register-page',
@@ -148,16 +149,4 @@ export class RegisterPageComponent implements OnInit, OnDestroy {
     this.destroy$.next();
     this.destroy$.complete();
   }
-}
-
-export function passwordValidator(control: AbstractControl): ValidationErrors | null {
-  const value = control.value;
-  if (!value) return null;
-
-  const hasUpperCase = /[A-Z]/.test(value);
-  const hasLowerCase = /[a-z]/.test(value);
-  const hasNumeric = /[0-9]/.test(value);
-  const hasSpecialChar = /[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]/.test(value);
-
-  return hasUpperCase && hasLowerCase && hasNumeric && hasSpecialChar ? null : { passwordComplexity: true };
 }
