@@ -25,35 +25,53 @@
     <mat-form-field appearance="outline">
       <mat-label>Nom d'utilisateur</mat-label>
       <input matInput type="text" formControlName="username" [readonly]="isLoading">
-      <mat-error *ngIf="username && username.touched && username.hasError('required')">Le nom d'utilisateur est requis</mat-error>
-      <mat-error *ngIf="username && username.touched && username.hasError('maxlength')">Le nom d'utilisateur doit faire moins de 50 caractères</mat-error>
+      @if (username && username.touched && username.hasError('required')) {
+        <mat-error>Le nom d'utilisateur est requis</mat-error>
+      }
+      @if (username && username.touched && username.hasError('maxlength')) {
+        <mat-error>Le nom d'utilisateur doit faire moins de 50 caractères</mat-error>
+      }
     </mat-form-field>
 
     <!-- Email -->
     <mat-form-field appearance="outline">
       <mat-label>Adresse e-mail</mat-label>
       <input matInput type="email" formControlName="email" [readonly]="isLoading" />
-      <mat-error *ngIf="email && email.touched && email.hasError('required')">L'adresse e-mail est requise</mat-error>
-      <mat-error *ngIf="email && email.touched && email.hasError('email')">L'adresse e-mail n'est pas valide</mat-error>
-      <mat-error *ngIf="email && email.touched && email.hasError('maxlength')">L'adresse e-mail doit faire moins de 100 caractères</mat-error>
+      @if (email && email.touched && email.hasError('required')) {
+        <mat-error>L'adresse e-mail est requise</mat-error>
+      }
+      @if (email && email.touched && email.hasError('email')) {
+        <mat-error>L'adresse e-mail n'est pas valide</mat-error>
+      }
+      @if (email && email.touched && email.hasError('maxlength')) {
+        <mat-error>L'adresse e-mail doit faire moins de 100 caractères</mat-error>
+      }
     </mat-form-field>
 
     <!-- Password -->
     <mat-form-field appearance="outline">
       <mat-label>Mot de passe</mat-label>
       <input matInput type="password" formControlName="password" [readonly]="isLoading" />
-      <mat-error *ngIf="password && password.touched && password.hasError('required')">
-        Le mot de passe requis
-      </mat-error>
-      <mat-error *ngIf="password && password.touched && password.hasError('minlength')">
-        Minimum 8 caractères
-      </mat-error>
-      <mat-error *ngIf="password && password.touched && password.hasError('maxlength')">
-        Maximum 100 caractères
-      </mat-error>
-      <mat-error *ngIf="password && password.touched && password.hasError('passwordComplexity')">
-        Doit contenir au moins une majuscule, une minuscule, un chiffre et un caractère spécial
-      </mat-error>
+      @if (password && password.touched && password.hasError('required')) {
+        <mat-error>
+          Le mot de passe requis
+        </mat-error>
+      }
+      @if (password && password.touched && password.hasError('minlength')) {
+        <mat-error>
+          Minimum 8 caractères
+        </mat-error>
+      }
+      @if (password && password.touched && password.hasError('maxlength')) {
+        <mat-error>
+          Maximum 100 caractères
+        </mat-error>
+      }
+      @if (password && password.touched && password.hasError('passwordComplexity')) {
+        <mat-error>
+          Doit contenir au moins une majuscule, une minuscule, un chiffre et un caractère spécial
+        </mat-error>
+      }
     </mat-form-field>
 
     <button
@@ -63,14 +81,20 @@
       type="submit"
       [disabled]="registerForm.invalid || isLoading"
     >
-    {{ loadingMessage }}
+      {{ loadingMessage }}
     </button>
 
     <!-- Global errors -->
     <div class="text-red-500 text-sm text-center mt-2">
-      <div *ngIf="registerForm && registerForm.hasError('userAlreadyExists')">Utilisateur déjà existant.</div>
-      <div *ngIf="hasRegistrationFailed">Erreur lors de l'inscription.</div>
-      <div *ngIf="hasLoginFailed">Erreur de connexion.</div>
+      @if (registerForm && registerForm.hasError('userAlreadyExists')) {
+        <div>Utilisateur déjà existant.</div>
+      }
+      @if (hasRegistrationFailed) {
+        <div>Erreur lors de l'inscription.</div>
+      }
+      @if (hasLoginFailed) {
+        <div>Erreur de connexion.</div>
+      }
     </div>
 
   </form>

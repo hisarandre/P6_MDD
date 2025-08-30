@@ -20,15 +20,21 @@
     <mat-form-field appearance="outline">
       <mat-label>Adresse e-mail</mat-label>
       <input matInput type="email" formControlName="email" [readonly]="isLoading" />
-      <mat-error *ngIf="email && email?.touched && email.hasError('required')">L'adresse e-mail est requise</mat-error>
-      <mat-error *ngIf="email && email?.touched && email.hasError('email')">Adresse e-mail invalide</mat-error>
+      @if (email && email.touched && email.hasError('required')) {
+        <mat-error>L'adresse e-mail est requise</mat-error>
+      }
+      @if (email && email.touched && email.hasError('email')) {
+        <mat-error>Adresse e-mail invalide</mat-error>
+      }
     </mat-form-field>
 
     <!-- Password -->
     <mat-form-field appearance="outline">
       <mat-label>Mot de passe</mat-label>
       <input matInput type="password" formControlName="password" [readonly]="isLoading" />
-      <mat-error *ngIf="password && password?.touched && password.hasError('required')">Le mot de passe est requis</mat-error>
+      @if (password && password.touched && password.hasError('required')) {
+        <mat-error>Le mot de passe est requis</mat-error>
+      }
     </mat-form-field>
 
     <!-- Submit -->
@@ -43,9 +49,11 @@
     </button>
 
     <!-- Global errors -->
-    <div class="text-red-500 text-sm text-center mt-2" *ngIf="hasLoginFailed">
-      Erreur de connexion. Vérifiez vos identifiants.
-    </div>
+    @if (hasLoginFailed) {
+      <div class="text-red-500 text-sm text-center mt-2">
+        Erreur de connexion. Vérifiez vos identifiants.
+      </div>
+    }
 
   </form>
 </section>

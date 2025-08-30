@@ -23,7 +23,6 @@ import { SubHeaderComponent } from '../../../../layout/components/sub-header/sub
   standalone: true,
   imports: [
     ReactiveFormsModule,
-    NgIf,
     MatFormFieldModule,
     MatInputModule,
     MatIconModule,
