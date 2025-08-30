@@ -2,26 +2,19 @@ package com.openclassrooms.mddapi.service;
 
 import com.openclassrooms.mddapi.dto.subject.SubjectResponseDto;
 import com.openclassrooms.mddapi.dto.subject.SubjectWithSubscriptionResponseDto;
-import com.openclassrooms.mddapi.dto.user.UserResponseDto;
 import com.openclassrooms.mddapi.entity.Subject;
 import com.openclassrooms.mddapi.entity.Subscription;
 import com.openclassrooms.mddapi.entity.User;
-import com.openclassrooms.mddapi.exception.UserNotFoundException;
 import com.openclassrooms.mddapi.mapper.SubjectMapper;
-import com.openclassrooms.mddapi.repository.PostRepository;
 import com.openclassrooms.mddapi.repository.SubjectRepository;
 import com.openclassrooms.mddapi.repository.SubscriptionRepository;
 import com.openclassrooms.mddapi.repository.UserRepository;
-import io.swagger.v3.oas.annotations.Parameter;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-import java.util.Map;
-import java.util.stream.Collectors;
 
 /**
  * Service responsible for subject-related operations.
@@ -36,15 +29,21 @@ public class SubjectService {
     private final UserRepository userRepository;
     private final SubjectMapper subjectMapper;
 
-
     /**
-     * Retrieve all subjects
-     * @return List of Subject
+     * Retrieves all available subjects.
+     *
+     * @return List of all {@link Subject} entities
      */
     public List<Subject> findAll() {
         return subjectRepository.findAll();
     }
 
+    /**
+     * Retrieves all subjects with subscription status for a specific user.
+     *
+     * @param userId the ID of the user to check subscription status for
+     * @return List of {@link SubjectWithSubscriptionResponseDto} with subscription status
+     */
     public List<SubjectWithSubscriptionResponseDto> findAllWithSubscriptionStatus(Long userId) {
         List<Subject> allSubjects = subjectRepository.findAll();
         List<Long> subscribedIds = subscriptionRepository.findByUserId(userId).stream()
@@ -54,9 +53,14 @@ public class SubjectService {
         return subjectMapper.toSubjectWithSubscriptionDtoList(allSubjects, subscribedIds);
     }
 
+    /**
+     * Retrieves all subjects that a specific user is subscribed to.
+     *
+     * @param userId the ID of the user
+     * @return List of {@link SubjectResponseDto} representing subscribed subjects
+     */
     public List<SubjectResponseDto> findSubscribedSubjects(Long userId) {
         List<Subscription> userSubscriptions = subscriptionRepository.findByUserId(userId);
-
         List<Subject> subscribedSubjects = userSubscriptions.stream()
                 .map(Subscription::getSubject)
                 .toList();
@@ -64,6 +68,15 @@ public class SubjectService {
         return subjectMapper.toSubjectResponseDtoList(subscribedSubjects);
     }
 
+    /**
+     * Creates a subscription between a user and a subject.
+     *
+     * @param user the {@link User} entity to subscribe
+     * @param subjectId the ID of the subject to subscribe to
+     * @throws IllegalStateException if the user is already subscribed to the subject
+     * @throws IllegalArgumentException if the subject is not found
+     */
+    @Transactional
     public void subscribeUserToSubject(User user, Integer subjectId) {
         // Check if subscription already exists
         boolean exists = subscriptionRepository.existsByUserIdAndSubjectId(user.getId(), subjectId.longValue());
@@ -82,6 +95,14 @@ public class SubjectService {
         subscriptionRepository.save(subscription);
     }
 
+    /**
+     * Removes a subscription between a user and a subject.
+     *
+     * @param userId the ID of the user to unsubscribe
+     * @param subjectId the ID of the subject to unsubscribe from
+     * @throws IllegalArgumentException if the subscription is not found
+     */
+    @Transactional
     public void unsubscribeUserFromSubject(Long userId, Integer subjectId) {
         Subscription subscription = subscriptionRepository
                 .findByUserIdAndSubjectId(userId, subjectId.longValue())
@@ -89,5 +110,4 @@ public class SubjectService {
 
         subscriptionRepository.delete(subscription);
     }
-
 }

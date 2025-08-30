@@ -5,20 +5,19 @@ import com.openclassrooms.mddapi.entity.Post;
 import com.openclassrooms.mddapi.entity.Subject;
 import com.openclassrooms.mddapi.entity.Subscription;
 import com.openclassrooms.mddapi.entity.User;
-import com.openclassrooms.mddapi.exception.UserNotFoundException;
 import com.openclassrooms.mddapi.repository.PostRepository;
 import com.openclassrooms.mddapi.repository.SubjectRepository;
 import com.openclassrooms.mddapi.repository.SubscriptionRepository;
-import com.openclassrooms.mddapi.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
-import java.time.LocalDateTime;
 import java.util.List;
 
 /**
- * Service responsible for post-related operations.
+ * Service for managing posts.
+ * Handles post retrieval, creation, and subscription-based filtering.
  */
 @Slf4j
 @Service
@@ -27,40 +26,70 @@ public class PostService {
 
     private final PostRepository postRepository;
     private final SubscriptionRepository subscriptionRepository;
-    private final UserRepository userRepository;
     private final SubjectRepository subjectRepository;
 
-    public List<Post> getSubscribedPosts(User user) {
+    /**
+     * Gets all posts from subjects the user is subscribed to.
+     *
+     * @param user the authenticated user
+     * @param sortOrder "desc" for newest first, "asc" for oldest first
+     * @return list of posts from subscribed subjects
+     */
+    @Transactional(readOnly = true)
+    public List<Post> getSubscribedPosts(User user, String sortOrder) {
         List<Subscription> userSubscriptions = subscriptionRepository.findByUserId(user.getId());
+
+        if (userSubscriptions.isEmpty()) {
+            return List.of();
+        }
 
         List<Subject> subscribedSubjects = userSubscriptions.stream()
                 .map(Subscription::getSubject)
                 .toList();
 
-        return postRepository.findBySubjectIn(subscribedSubjects);
+        if (subscribedSubjects.isEmpty()) {
+            return List.of();
+        }
+
+        if ("asc".equals(sortOrder)) {
+            return postRepository.findBySubjectInOrderByCreatedAtAsc(subscribedSubjects);
+        } else {
+            return postRepository.findBySubjectInOrderByCreatedAtDesc(subscribedSubjects);
+        }
     }
 
+    /**
+     * Gets detailed information about a specific post.
+     *
+     * @param postId the ID of the post to retrieve
+     * @return the post entity with all details
+     * @throws IllegalArgumentException if post not found
+     */
+    @Transactional(readOnly = true)
     public Post getPostDetails(Long postId) {
         return postRepository.findById(postId)
                 .orElseThrow(() -> new IllegalArgumentException("Post not found"));
     }
 
-    public void createPost(PostRequestDto postRequestDto, Long authorId) {
-        User author = userRepository.findById(authorId)
-                .orElseThrow(() -> new IllegalArgumentException("User not found with id: " + authorId));
-
-        // Get the subject
+    /**
+     * Creates a new post in the specified subject.
+     *
+     * @param postRequestDto the post data (title, content, subject ID)
+     * @param author the user creating the post
+     * @throws IllegalArgumentException if subject not found
+     */
+    @Transactional
+    public void createPost(PostRequestDto postRequestDto, User author) {
+        // Find the subject
         Subject subject = subjectRepository.findById(postRequestDto.getSubjectId())
                 .orElseThrow(() -> new IllegalArgumentException("Subject not found with id: " + postRequestDto.getSubjectId()));
 
-        // Build the post
         Post post = new Post();
         post.setTitle(postRequestDto.getTitle());
         post.setContent(postRequestDto.getContent());
         post.setAuthor(author);
         post.setSubject(subject);
 
-        // Save
         postRepository.save(post);
     }
 }

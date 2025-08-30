@@ -1,13 +1,10 @@
 package com.openclassrooms.mddapi.controller;
 
-import com.openclassrooms.mddapi.dto.subject.SubjectResponseDto;
-import com.openclassrooms.mddapi.dto.subject.SubjectWithSubscriptionResponseDto;
 import com.openclassrooms.mddapi.dto.user.UserResponseDto;
 import com.openclassrooms.mddapi.dto.user.UserUpdateRequestDto;
 import com.openclassrooms.mddapi.entity.User;
 import com.openclassrooms.mddapi.mapper.UserMapper;
 import com.openclassrooms.mddapi.service.AuthService;
-import com.openclassrooms.mddapi.service.SubjectService;
 import com.openclassrooms.mddapi.service.UserService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -19,22 +16,21 @@ import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Positive;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatus;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationToken;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
-
+@Slf4j
 @RestController
 @RequestMapping("/api/users")
 @RequiredArgsConstructor
-@Tag(name = "Users", description = "Endpoints for retrieving user information")
+@Tag(name = "Users", description = "Endpoints for managing user profiles and information")
 public class UserController {
 
     private final UserService userService;
-    private final SubjectService subjectService;
     private final AuthService authService;
     private final UserMapper userMapper;
 
@@ -46,22 +42,42 @@ public class UserController {
     @ApiResponses(value = {
             @ApiResponse(
                     responseCode = "200",
-                    description = "User found successfully",
-                    content = @Content(mediaType = "application/json",
-                            schema = @Schema(implementation = UserResponseDto.class))
+                    description = "User profile retrieved successfully",
+                    content = @Content(
+                            mediaType = "application/json",
+                            schema = @Schema(implementation = UserResponseDto.class)
+                    )
+            ),
+            @ApiResponse(
+                    responseCode = "400",
+                    description = "Invalid user ID provided",
+                    content = @Content
             ),
             @ApiResponse(
                     responseCode = "404",
-                    description = "User not found",
+                    description = "User not found with the given ID",
+                    content = @Content
+            ),
+            @ApiResponse(
+                    responseCode = "500",
+                    description = "Internal server error",
                     content = @Content
             )
     })
     public ResponseEntity<UserResponseDto> getUserById(
-            @Parameter(description = "The id of the user", required = true)
+            @Parameter(
+                    description = "The unique ID of the user to retrieve",
+                    required = true,
+                    example = "1"
+            )
             @PathVariable Long id
     ) {
+        log.info("Retrieving user profile for ID: {}", id);
+
         User user = userService.getUserById(id);
         UserResponseDto responseDto = userMapper.toUserResponseDto(user);
+
+        log.info("Successfully retrieved user profile for ID: {}", id);
 
         return ResponseEntity.ok(responseDto);
     }
@@ -69,66 +85,101 @@ public class UserController {
     @GetMapping("/me")
     @Operation(
             summary = "Get current user profile",
-            description = "Retrieve the profile information of the currently authenticated user."
+            description = "Retrieve the profile information of the currently authenticated user",
+            security = @SecurityRequirement(name = "bearerAuth")
     )
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200",
+            @ApiResponse(
+                    responseCode = "200",
                     description = "User profile retrieved successfully",
                     content = @Content(
                             mediaType = "application/json",
-                            schema = @Schema(implementation = UserResponseDto.class))
+                            schema = @Schema(implementation = UserResponseDto.class)
+                    )
             ),
-            @ApiResponse(responseCode = "401",
-                    description = "Unauthorized - Missing or invalid JWT token",
-                    content = @Content),
-            @ApiResponse(responseCode = "403",
-                    description = "Forbidden - Token is expired or lacks required scope",
-                    content = @Content)
+            @ApiResponse(
+                    responseCode = "401",
+                    description = "Authentication required - missing or invalid JWT token",
+                    content = @Content
+            ),
+            @ApiResponse(
+                    responseCode = "500",
+                    description = "Internal server error",
+                    content = @Content
+            )
     })
-    @SecurityRequirement(name = "Bearer Authentication")
-    public ResponseEntity<UserResponseDto> me(
+    public ResponseEntity<UserResponseDto> getCurrentUser(
             @Parameter(hidden = true) JwtAuthenticationToken jwtAuthenticationToken
     ) {
+        log.info("Retrieving current user profile");
+
         User user = authService.getAuthenticatedUser(jwtAuthenticationToken);
-        return ResponseEntity.ok(userMapper.toUserResponseDto(user));
+        UserResponseDto responseDto = userMapper.toUserResponseDto(user);
+
+        log.info("Successfully retrieved profile for user: {}", user.getEmail());
+
+        return ResponseEntity.ok(responseDto);
     }
 
 
-    @PutMapping("/me/update")
+    @PutMapping("/me")
     @Operation(
             summary = "Update current user profile",
-            description = "Update the profile information of the currently authenticated user."
+            description = "Update the profile information of the currently authenticated user. " +
+                    "Only provided fields will be updated.",
+            security = @SecurityRequirement(name = "bearerAuth")
     )
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200",
+            @ApiResponse(
+                    responseCode = "200",
                     description = "User profile updated successfully",
                     content = @Content(
                             mediaType = "application/json",
-                            schema = @Schema(implementation = UserResponseDto.class))
+                            schema = @Schema(implementation = UserResponseDto.class)
+                    )
             ),
-            @ApiResponse(responseCode = "400",
-                    description = "Bad Request - Invalid input data",
-                    content = @Content),
-            @ApiResponse(responseCode = "401",
-                    description = "Unauthorized - Missing or invalid JWT token",
-                    content = @Content),
-            @ApiResponse(responseCode = "403",
-                    description = "Forbidden - Token is expired or lacks required scope",
-                    content = @Content),
-            @ApiResponse(responseCode = "409",
-                    description = "Conflict - Username or email already exists",
-                    content = @Content)
+            @ApiResponse(
+                    responseCode = "400",
+                    description = "Invalid input data or validation errors",
+                    content = @Content
+            ),
+            @ApiResponse(
+                    responseCode = "401",
+                    description = "Authentication required - missing or invalid JWT token",
+                    content = @Content
+            ),
+            @ApiResponse(
+                    responseCode = "409",
+                    description = "Conflict - username or email already exists",
+                    content = @Content
+            ),
+            @ApiResponse(
+                    responseCode = "422",
+                    description = "Validation failed for update data",
+                    content = @Content
+            ),
+            @ApiResponse(
+                    responseCode = "500",
+                    description = "Internal server error",
+                    content = @Content
+            )
     })
-    @SecurityRequirement(name = "Bearer Authentication")
-    public ResponseEntity<UserResponseDto> updateUser(
+    public ResponseEntity<UserResponseDto> updateCurrentUser(
             @Parameter(hidden = true) JwtAuthenticationToken jwtAuthenticationToken,
-            @Valid @RequestBody @NotNull UserUpdateRequestDto userUpdateRequestDto
+            @Parameter(
+                    description = "Updated user information (only provided fields will be updated)",
+                    required = true
+            )
+            @Valid @RequestBody @NotNull(message = "Update request cannot be null") UserUpdateRequestDto userUpdateRequestDto
     ) {
-        User user = authService.getAuthenticatedUser(jwtAuthenticationToken);
+        log.info("Updating current user profile");
 
-        User updatedUser = userService.updateUser(userUpdateRequestDto, user);
+        User currentUser = authService.getAuthenticatedUser(jwtAuthenticationToken);
+        User updatedUser = userService.updateUser(userUpdateRequestDto, currentUser);
+        UserResponseDto responseDto = userMapper.toUserResponseDto(updatedUser);
 
-        return ResponseEntity.ok(userMapper.toUserResponseDto(user));
+        log.info("Successfully updated profile for user: {}", updatedUser.getEmail());
+
+        return ResponseEntity.ok(responseDto);
     }
-
 }

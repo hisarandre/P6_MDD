@@ -12,5 +12,7 @@ import java.util.Optional;
 @Repository
 public interface PostRepository extends JpaRepository<Post, Long> {
     List<Post> findBySubjectIn(List<Subject> subjects);
+    List<Post> findBySubjectInOrderByCreatedAtAsc(List<Subject> subjects);
+    List<Post> findBySubjectInOrderByCreatedAtDesc(List<Subject> subjects);
 
 }
