@@ -3,31 +3,31 @@ import { Routes } from '@angular/router';
 export const routes: Routes = [
   {
     path: '',
-    redirectTo: 'home',
+    redirectTo: 'home-page',
     pathMatch: 'full'
   },
   {
-    path: 'home',
-    loadComponent: () => import('./features/home/pages/home/home.component').then(c => c.HomeComponent),
+    path: 'home-page',
+    loadComponent: () => import('./features/home/pages/home-page/home-page.component').then(c => c.HomePageComponent),
   },
   {
     path: 'login',
-    loadComponent: () => import('./features/auth/pages/login/login.component').then(c => c.LoginComponent)
+    loadComponent: () => import('./features/auth/pages/login-page/login-page.component').then(c => c.LoginPageComponent)
   },
   {
     path: 'register',
-    loadComponent: () => import('./features/auth/pages/register/register.component').then(c => c.RegisterComponent)
+    loadComponent: () => import('./features/auth/pages/register-page/register-page.component').then(c => c.RegisterPageComponent)
   },
   {
     path: 'me',
-    loadComponent: () => import('./features/me/pages/me/me.component').then(c => c.MeComponent)
+    loadComponent: () => import('./features/me/pages/me-page/me-page.component').then(c => c.MePageComponent)
   },
   {
     path: 'posts',
-    loadComponent: () => import('./features/me/pages/me/me.component').then(c => c.MeComponent)
+    loadChildren: () => import('./features/posts/posts.routes').then(r => r.POSTS_ROUTES)
   },
   {
     path: 'subjects',
-    loadComponent: () => import('./features/me/pages/me/me.component').then(c => c.MeComponent)
+    loadComponent: () => import('./features/subjects/pages/subjects-page/subjects-page.component').then(c => c.SubjectsPageComponent)
   }
 ];

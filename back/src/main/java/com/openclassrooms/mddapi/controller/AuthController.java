@@ -3,6 +3,9 @@ package com.openclassrooms.mddapi.controller;
 import com.openclassrooms.mddapi.dto.auth.AuthResponseDto;
 import com.openclassrooms.mddapi.dto.auth.LoginRequestDto;
 import com.openclassrooms.mddapi.dto.auth.RegisterRequestDto;
+import com.openclassrooms.mddapi.dto.user.UserResponseDto;
+import com.openclassrooms.mddapi.entity.User;
+import com.openclassrooms.mddapi.mapper.UserMapper;
 import com.openclassrooms.mddapi.service.AuthService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -10,12 +13,14 @@ import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationToken;
 import org.springframework.web.bind.annotation.*;
 
 @Slf4j
@@ -26,6 +31,7 @@ import org.springframework.web.bind.annotation.*;
 public class AuthController {
 
     private final AuthService authService;
+    private final UserMapper userMapper;
 
     @PostMapping("/register")
     @Operation(
@@ -122,5 +128,44 @@ public class AuthController {
         log.info("User logged in successfully with email: {}", loginRequestDto.getEmail());
 
         return ResponseEntity.ok(new AuthResponseDto(token));
+    }
+
+    @GetMapping("/me")
+    @Operation(
+            summary = "Get current user profile",
+            description = "Retrieve the profile information of the currently authenticated user",
+            security = @SecurityRequirement(name = "bearerAuth")
+    )
+    @ApiResponses(value = {
+            @ApiResponse(
+                    responseCode = "200",
+                    description = "User profile retrieved successfully",
+                    content = @Content(
+                            mediaType = "application/json",
+                            schema = @Schema(implementation = UserResponseDto.class)
+                    )
+            ),
+            @ApiResponse(
+                    responseCode = "401",
+                    description = "Authentication required - missing or invalid JWT token",
+                    content = @Content
+            ),
+            @ApiResponse(
+                    responseCode = "500",
+                    description = "Internal server error",
+                    content = @Content
+            )
+    })
+    public ResponseEntity<UserResponseDto> getCurrentUser(
+            @Parameter(hidden = true) JwtAuthenticationToken jwtAuthenticationToken
+    ) {
+        log.info("Retrieving current user profile");
+
+        User user = authService.getAuthenticatedUser(jwtAuthenticationToken);
+        UserResponseDto responseDto = userMapper.toUserResponseDto(user);
+
+        log.info("Successfully retrieved profile for user: {}", user.getEmail());
+
+        return ResponseEntity.ok(responseDto);
     }
 }

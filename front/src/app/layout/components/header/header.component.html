@@ -14,13 +14,28 @@
       <a mat-list-item (click)="logout(); closeSidenav()" class="hover:text-red-500 font-medium">
         Se déconnecter
       </a>
-      <a mat-list-item routerLink="topics/posts" routerLinkActive="active-link" (click)="closeSidenav()" class="hover:text-blue-500 font-medium">
+      <a mat-list-item
+         routerLink="/posts"
+         routerLinkActive="active-link"
+         [routerLinkActiveOptions]="{ exact: false }"
+         (click)="closeSidenav()"
+         class="hover:text-blue-500 font-medium">
         Articles
       </a>
-      <a mat-list-item routerLink="topics" routerLinkActive="active-link" (click)="closeSidenav()" class="hover:text-blue-500 font-medium">
+      <a mat-list-item
+         routerLink="/subjects"
+         routerLinkActive="active-link"
+         [routerLinkActiveOptions]="{ exact: true }"
+         (click)="closeSidenav()"
+         class="hover:text-blue-500 font-medium">
         Thèmes
       </a>
-      <a mat-list-item routerLink="me" routerLinkActive="active-link" (click)="closeSidenav()" class="hover:text-blue-500 font-medium">
+      <a mat-list-item
+         routerLink="/me"
+         routerLinkActive="active-link"
+         [routerLinkActiveOptions]="{ exact: false }"
+         (click)="closeSidenav()"
+         class="hover:text-blue-500 font-medium">
         Mon compte
       </a>
     </mat-nav-list>
@@ -42,14 +57,34 @@
       <!-- Desktop navigation -->
       <div class="hidden md:flex space-x-4 items-center">
         <ng-container *ngIf="isLoggedIn$ | async">
-          <a mat-button (click)="logout()" class="text-red-500 font-medium">Se déconnecter</a>
-          <a mat-button routerLink="topics/posts" routerLinkActive="active-link" class="text-gray-700 hover:text-blue-500 font-medium">Articles</a>
-          <a mat-button routerLink="topics" routerLinkActive="active-link" class="text-gray-700 hover:text-blue-500 font-medium">Thèmes</a>
-          <a routerLink="me" routerLinkActive="active-link">
-            <button mat-icon-button class="text-gray-700 hover:text-blue-500">
-              <mat-icon>person</mat-icon>
+          <a mat-button
+             (click)="logout()"
+             class="!text-red-500 font-medium">
+            Se déconnecter
+          </a>
+
+          <a mat-button
+             routerLink="posts"
+             routerLinkActive="active-link"
+             >
+            Articles
+          </a>
+
+          <a mat-button
+             routerLink="subjects"
+             routerLinkActive="active-link"
+             >
+            Thèmes
+          </a>
+
+          <a routerLink="me"
+             routerLinkActive="active-link"
+             >
+            <button mat-icon-button>
+              <mat-icon class="nav-icon">person</mat-icon>
             </button>
           </a>
+
         </ng-container>
       </div>
 

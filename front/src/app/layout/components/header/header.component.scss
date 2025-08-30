@@ -1,4 +1,16 @@
 .mat-toolbar {
   background-color: #F9FAFB !important;
-  border-bottom: 1px solid #d1d5db;
+  border-bottom: 1px solid #d1d5db !important;
+}
+
+.active-link {
+  color: #7763c5 !important;
+}
+
+.nav-icon {
+  @apply text-gray-500 transition-colors duration-200;
+}
+
+.active-link .nav-icon {
+  color: #7763c5 !important;
 }

@@ -46,11 +46,11 @@ export class HeaderComponent implements OnInit {
   ngOnInit(): void {
     this.checkScreenSize();
 
-    // Hide navbar on certain routes (example: login page)
+    // Hide navbar on certain routes (example: login-page page)
     this.router.events
       .pipe(filter((event): event is NavigationEnd => event instanceof NavigationEnd))
       .subscribe(event => {
-        this.showNavbar = event.urlAfterRedirects !== '/home';
+        this.showNavbar = event.urlAfterRedirects !== '/home-page';
       });
   }
 

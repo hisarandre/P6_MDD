@@ -17,9 +17,9 @@ import { MatButtonModule } from '@angular/material/button';
 import { SubHeaderComponent } from '../../../../layout/components/sub-header/sub-header.component';
 
 @Component({
-  selector: 'app-login',
-  templateUrl: './login.component.html',
-  styleUrls: ['./login.component.scss'],
+  selector: 'app-login-page',
+  templateUrl: './login-page.component.html',
+  styleUrls: ['./login-page.component.scss'],
   standalone: true,
   imports: [
     ReactiveFormsModule,
@@ -34,7 +34,7 @@ import { SubHeaderComponent } from '../../../../layout/components/sub-header/sub
     SubHeaderComponent
   ]
 })
-export class LoginComponent implements OnInit, OnDestroy {
+export class LoginPageComponent implements OnInit, OnDestroy {
   public loginForm!: FormGroup;
   public isLoggingIn = false;
   public hasLoginFailed = false;
@@ -86,7 +86,7 @@ export class LoginComponent implements OnInit, OnDestroy {
         takeUntil(this.destroy$)
       )
       .subscribe(user => {
-        if (user) this.router.navigate(['/feed']).catch(console.error);
+        if (user) this.router.navigate(['/posts']).catch(console.error);
       });
 
   }

@@ -20,9 +20,9 @@ import { MatButtonModule } from '@angular/material/button';
 import {SubHeaderComponent} from "../../../../layout/components/sub-header/sub-header.component";
 
 @Component({
-  selector: 'app-register',
-  templateUrl: './register.component.html',
-  styleUrls: ['./register.component.scss'],
+  selector: 'app-register-page',
+  templateUrl: './register-page.component.html',
+  styleUrls: ['./register-page.component.scss'],
   standalone: true,
   imports: [
     ReactiveFormsModule,
@@ -37,7 +37,7 @@ import {SubHeaderComponent} from "../../../../layout/components/sub-header/sub-h
     SubHeaderComponent
   ]
 })
-export class RegisterComponent implements OnInit, OnDestroy {
+export class RegisterPageComponent implements OnInit, OnDestroy {
   public registerForm!: FormGroup;
 
   public isRegistering = false;
