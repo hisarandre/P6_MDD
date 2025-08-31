@@ -1,0 +1,14 @@
+<section>
+  @if (allPosts$ | async; as allPosts) {
+  <div class="grid gap-6 md:grid-cols-2">
+    @for (post of allPosts; track post.id) {
+      <app-post-card
+        [post]="post"
+      />
+    } @empty {
+      <p>La liste des thèmes est vide.</p>
+    }
+  </div>
+}
+</section>
+
