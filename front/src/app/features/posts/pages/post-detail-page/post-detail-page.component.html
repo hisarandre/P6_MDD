@@ -1,1 +1,19 @@
-<p>post-detail-page works!</p>
+<app-sub-header (back)="goBack()" [title]="postTitle" titleAlign="left"></app-sub-header>
+<section class="px-4 md:px-0 md:mx-16">
+  @if (post$ | async; as post) {
+    <app-post-details-card [post]="post"></app-post-details-card>
+  } @else {
+    <div class="text-center">
+      <p>Chargement du post...</p>
+    </div>
+  }
+  <hr>
+
+  <h2 class="font-normal text-lg">Commentaires</h2>
+</section>
+
+<section class="m-auto w-[80%]">
+  <app-comments-list
+    [postId]="postId"
+  ></app-comments-list>
+</section>

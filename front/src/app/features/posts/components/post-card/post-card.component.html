@@ -1,10 +1,13 @@
 <!-- Parent container for cards -->
-<mat-card class="h-full flex flex-col !bg-gray-100 !shadow-none">
+<mat-card
+  class="h-full flex flex-col !bg-gray-100 cursor-pointer transition-shadow duration-200 hover:!shadow-md !shadow-none"
+  (click)="navigateToPost(post.id)">
+
   <!-- Header with title, author and date -->
   <mat-card-header>
     <div class="flex flex-col justify-between w-full gap-4">
       <!-- Title -->
-      <mat-card-title class="text-xl font-bold leading-tight">
+      <mat-card-title class="text-xl font-bold leading-tight transition-colors duration-200 group-hover:text-blue-600">
         {{ post.title }}
       </mat-card-title>
 

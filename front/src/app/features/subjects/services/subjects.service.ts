@@ -3,6 +3,7 @@ import { Injectable } from '@angular/core';
 import { BehaviorSubject, Observable, of } from 'rxjs';
 import { environment } from "../../../../environments/environment";
 import { SubjectWithStatus } from "../interfaces/subjectWithStatus.interface";
+import {SubjectName} from "../interfaces/subjectName.interface";
 
 @Injectable({ providedIn: 'root' })
 export class SubjectsService {
@@ -10,7 +11,11 @@ export class SubjectsService {
 
   constructor(private httpClient: HttpClient) {}
 
-  getAllSubjects(): Observable<SubjectWithStatus[]> {
+  getSubjectsForSelect(): Observable<SubjectName[]> {
+    return this.httpClient.get<SubjectName[]>(`${this.pathService}/names`);
+  }
+
+  getAllSubjectsWithStatus(): Observable<SubjectWithStatus[]> {
     return this.httpClient.get<SubjectWithStatus[]>(`${this.pathService}/subscriptions/status`);
   }
 

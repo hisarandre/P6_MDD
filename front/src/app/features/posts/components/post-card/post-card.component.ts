@@ -5,6 +5,7 @@ import {SubjectWithStatus} from "../../../subjects/interfaces/subjectWithStatus.
 import {SubjectSubscribed} from "../../../subjects/interfaces/subjectSubscribed.interface";
 import {Post} from "../../interfaces/post.interface";
 import {DatePipe} from "@angular/common";
+import {Router} from "@angular/router";
 
 @Component({
   selector: 'app-post-card',
@@ -20,5 +21,11 @@ import {DatePipe} from "@angular/common";
 })
 export class PostCardComponent {
   @Input() post!: Post;
+
+  constructor(private router: Router) {}
+
+  navigateToPost(subjectId: number): void {
+    this.router.navigate(['/posts', subjectId]).catch(console.error);
+  }
 
 }

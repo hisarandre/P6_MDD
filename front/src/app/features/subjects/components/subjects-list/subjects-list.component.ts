@@ -32,7 +32,7 @@ export class SubjectsListComponent implements OnInit, OnDestroy {
   ) { }
 
   ngOnInit(): void {
-    this.allSubjects$ = this.subjectsService.getAllSubjects();
+    this.allSubjects$ = this.subjectsService.getAllSubjectsWithStatus();
   }
 
   ngOnDestroy(): void {
@@ -42,7 +42,7 @@ export class SubjectsListComponent implements OnInit, OnDestroy {
 
   subscribe(subjectId: number): void {
     this.subjectsService.subscribe(subjectId).pipe(
-      switchMap(() => this.subjectsService.getAllSubjects()),
+      switchMap(() => this.subjectsService.getAllSubjectsWithStatus()),
       takeUntil(this.destroy$)
     ).subscribe({
       next: (subjects) => {

@@ -1,0 +1,16 @@
+<div class="h-full flex flex-col">
+  <!-- Header with title, author and date -->
+  <div class="flex flex-col justify-between w-full">
+    <!-- Author and date - responsive wrap -->
+    <div class="text-sm text-gray-600 flex flex-wrap gap-4 md:gap-8">
+      <span>{{ post.createdAt | date: 'dd/MM/yyyy' }}</span>
+      <span>{{ post.author }}</span>
+      <span>{{ post.subject }}</span>
+    </div>
+  </div>
+
+  <!-- Content -->
+  <div class="flex-1 mt-4">
+    <p>{{ post.content }}</p>
+  </div>
+</div>

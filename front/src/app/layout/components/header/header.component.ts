@@ -49,7 +49,7 @@ export class HeaderComponent implements OnInit {
     this.router.events
       .pipe(filter((event): event is NavigationEnd => event instanceof NavigationEnd))
       .subscribe(event => {
-        this.showNavbar = event.urlAfterRedirects !== '/home-page';
+        this.showNavbar = event.urlAfterRedirects !== '/home';
       });
   }
 
