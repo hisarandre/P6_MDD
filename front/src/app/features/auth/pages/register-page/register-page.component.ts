@@ -102,7 +102,7 @@ export class RegisterPageComponent implements OnInit, OnDestroy {
         }),
         switchMap((token: string | null) => {
           if (!token) return of(null);
-          return this.authService.performAutoLogin(token).pipe(
+          return this.authService.autoLogin(token).pipe(
             catchError((loginError: HttpErrorResponse) => {
               this.handleLoginError(loginError);
               return of(null);

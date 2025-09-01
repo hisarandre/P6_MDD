@@ -17,7 +17,7 @@ import {RouterLink} from "@angular/router";
   styleUrl: './posts-feed-page.component.scss'
 })
 export class PostsFeedPageComponent {
-  sortAscending = true;
+  sortAscending = false;
 
   toggleSort(): void {
     this.sortAscending = !this.sortAscending;

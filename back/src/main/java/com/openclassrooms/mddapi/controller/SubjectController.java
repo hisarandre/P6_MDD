@@ -213,7 +213,7 @@ public class SubjectController {
             )
     })
     @SecurityRequirement(name = "Bearer Authentication")
-    public ResponseEntity<Void> subscribeToSubject(
+    public ResponseEntity<List<SubjectWithSubscriptionResponseDto>> subscribeToSubject(
             @Parameter(hidden = true) JwtAuthenticationToken jwtAuthenticationToken,
             @Parameter(
                     description = "The ID of the subject to subscribe to",
@@ -224,7 +224,10 @@ public class SubjectController {
     ) {
         User user = authService.getAuthenticatedUser(jwtAuthenticationToken);
         subjectService.subscribeUserToSubject(user, subjectId);
-        return ResponseEntity.ok().build();
+
+        List<SubjectWithSubscriptionResponseDto> subjects =
+                subjectService.findAllWithSubscriptionStatus(user.getId());
+        return ResponseEntity.ok(subjects);
     }
 
     @DeleteMapping("/{subjectId}/unsubscribe")
@@ -255,7 +258,7 @@ public class SubjectController {
             )
     })
     @SecurityRequirement(name = "Bearer Authentication")
-    public ResponseEntity<Void> unsubscribeFromSubject(
+    public ResponseEntity<List<SubjectResponseDto>> unsubscribeFromSubject(
             @Parameter(hidden = true) JwtAuthenticationToken jwtAuthenticationToken,
             @Parameter(
                     description = "The ID of the subject to unsubscribe from",
@@ -266,6 +269,8 @@ public class SubjectController {
     ) {
         User user = authService.getAuthenticatedUser(jwtAuthenticationToken);
         subjectService.unsubscribeUserFromSubject(user.getId(), subjectId);
-        return ResponseEntity.noContent().build();
+
+        List<SubjectResponseDto> subjects = subjectService.findSubscribedSubjects(user.getId());
+        return ResponseEntity.ok(subjects);
     }
 }

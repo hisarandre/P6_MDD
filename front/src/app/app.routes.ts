@@ -28,7 +28,7 @@ export const routes: Routes = [
 
   {
     path: 'me',
-    loadComponent: () => import('./features/me/pages/me-page/me-page.component').then(c => c.MePageComponent),
+    loadComponent: () => import('./features/users/pages/me-page/me-page.component').then(c => c.MePageComponent),
     canActivate: [AuthGuard]
   },
   {

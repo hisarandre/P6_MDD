@@ -15,7 +15,7 @@ import { PostCardComponent } from "../post-card/post-card.component";
   styleUrl: './posts-list.component.scss'
 })
 export class PostsListComponent implements OnInit, OnDestroy {
-  private _sortAscending = true;
+  private _sortAscending = false;
 
   @Input()
   set sortAscending(value: boolean) {

@@ -33,7 +33,7 @@ export class AuthService {
     );
   }
 
-  public performAutoLogin(token: string): Observable<User> {
+  public autoLogin(token: string): Observable<User> {
     localStorage.setItem('token', token);
 
     return this.getUserProfile().pipe(

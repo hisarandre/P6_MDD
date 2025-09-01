@@ -1,0 +1,80 @@
+<!-- Form -->
+<form [formGroup]="meForm"
+      (ngSubmit)="onUpdate()"
+      class="w-full max-w-md flex flex-col gap-4">
+
+  <!-- Username -->
+  <mat-form-field appearance="outline">
+    <mat-label>Nom d'utilisateur</mat-label>
+    <input matInput type="text" formControlName="username" [readonly]="isLoading">
+
+    @if (username && username.touched && username.hasError('required')) {
+      <mat-error>Le nom d'utilisateur est requis</mat-error>
+    }
+
+    @if (username && username.touched && username.hasError('maxlength')) {
+      <mat-error>Le nom d'utilisateur doit faire moins de 50 caractères</mat-error>
+    }
+  </mat-form-field>
+
+  <!-- Email -->
+  <mat-form-field appearance="outline">
+    <mat-label>Adresse e-mail</mat-label>
+    <input matInput type="email" formControlName="email" [readonly]="isLoading" />
+
+    @if (email && email.touched && email.hasError('required')) {
+      <mat-error>L'adresse e-mail est requise</mat-error>
+    }
+
+    @if (email && email.touched && email.hasError('email')) {
+      <mat-error>L'adresse e-mail n'est pas valide</mat-error>
+    }
+
+    @if (email && email.touched && email.hasError('maxlength')) {
+      <mat-error>L'adresse e-mail doit faire moins de 100 caractères</mat-error>
+    }
+  </mat-form-field>
+
+  <!-- Password -->
+  <span class="text-gray-400 text-sm">
+      Le mot de passe est facultatif et ne sera pas modifié si non renseigné
+  </span>
+
+  <mat-form-field appearance="outline">
+    <mat-label>Mot de passe</mat-label>
+    <input matInput type="password" formControlName="password" [readonly]="isLoading" />
+    @if (password && password.touched && password.hasError('minlength')) {
+      <mat-error>Minimum 8 caractères</mat-error>
+    }
+
+    @if (password && password.touched && password.hasError('maxlength')) {
+      <mat-error>Maximum 100 caractères</mat-error>
+    }
+
+    @if (password && password.touched && password.hasError('passwordComplexity')) {
+      <mat-error>Doit contenir au moins une majuscule, une minuscule, un chiffre et un caractère spécial</mat-error>
+    }
+  </mat-form-field>
+
+  <button
+    mat-raised-button
+    class="mt-8 w-auto self-center"
+    color="primary"
+    type="submit"
+    [disabled]="meForm.invalid || isLoading"
+  >
+    {{ loadingMessage }}
+  </button>
+
+  <!-- Global errors -->
+  <div class="text-red-500 text-sm text-center mt-2">
+    @if (meForm && meForm.hasError('userAlreadyExists')) {
+      <div>Utilisateur déjà existant.</div>
+    }
+
+    @if (hasUpdateFailed) {
+      <div>Erreur lors de la mise à jour.</div>
+    }
+  </div>
+
+</form>

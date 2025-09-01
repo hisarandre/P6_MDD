@@ -4,6 +4,7 @@ import { BehaviorSubject, Observable, of } from 'rxjs';
 import { environment } from "../../../../environments/environment";
 import { SubjectWithStatus } from "../interfaces/subjectWithStatus.interface";
 import {SubjectName} from "../interfaces/subjectName.interface";
+import {SubjectSubscribed} from "../interfaces/subjectSubscribed.interface";
 
 @Injectable({ providedIn: 'root' })
 export class SubjectsService {
@@ -23,11 +24,11 @@ export class SubjectsService {
     return this.httpClient.get<SubjectWithStatus[]>(`${this.pathService}/subscribed`);
   }
 
-  subscribe(subjectId: number): Observable<void> {
-    return this.httpClient.post<void>(`${this.pathService}/${subjectId}/subscribe`, {});
+  subscribe(subjectId: number): Observable<SubjectWithStatus[] > {
+    return this.httpClient.post<SubjectWithStatus[] >(`${this.pathService}/${subjectId}/subscribe`, {});
   }
 
-  unsubscribe(subjectId: number): Observable<void> {
-    return this.httpClient.delete<void>(`${this.pathService}/${subjectId}/unsubscribe`, {});
+  unsubscribe(subjectId: number): Observable<SubjectSubscribed[]> {
+    return this.httpClient.delete<SubjectSubscribed[]>(`${this.pathService}/${subjectId}/unsubscribe`, {});
   }
 }

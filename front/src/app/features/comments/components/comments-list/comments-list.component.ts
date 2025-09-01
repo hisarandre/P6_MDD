@@ -1,18 +1,17 @@
-import {Component, Input, OnInit, OnDestroy} from '@angular/core';
-import {AsyncPipe} from "@angular/common";
-import {PostCardComponent} from "../../../posts/components/post-card/post-card.component";
-import {Observable, of, Subject, switchMap, takeUntil, catchError, finalize} from "rxjs";
-import {CommentsService} from "../../services/comments.service";
-import {CommentCardComponent} from "../comment-card/comment-card.component";
-import {Comment} from "../../interfaces/comment.interface";
-import {FormBuilder, FormGroup, ReactiveFormsModule, Validators} from "@angular/forms";
-import {MatIcon} from "@angular/material/icon";
-import {MatIconButton} from "@angular/material/button";
-import {MatError, MatFormField, MatInput, MatLabel} from "@angular/material/input";
-import {CdkTextareaAutosize} from "@angular/cdk/text-field";
-import {HttpErrorResponse} from "@angular/common/http";
-import {MatSnackBar} from "@angular/material/snack-bar";
-import {AddCommentRequest} from "../../interfaces/addCommentRequest.interface";
+import { Component, Input, OnInit, OnDestroy } from '@angular/core';
+import { AsyncPipe } from '@angular/common';
+import { CommentCardComponent } from '../comment-card/comment-card.component';
+import { Comment } from '../../interfaces/comment.interface';
+import { CommentsService } from '../../services/comments.service';
+import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { MatIcon } from '@angular/material/icon';
+import { MatIconButton } from '@angular/material/button';
+import { MatFormField, MatInput } from '@angular/material/input';
+import { CdkTextareaAutosize } from '@angular/cdk/text-field';
+import { MatSnackBar } from '@angular/material/snack-bar';
+import { Subject, BehaviorSubject, takeUntil, catchError, of } from 'rxjs';
+import { AddCommentRequest } from '../../interfaces/addCommentRequest.interface';
+import { HttpErrorResponse } from '@angular/common/http';
 
 @Component({
   selector: 'app-comments-list',
@@ -27,16 +26,18 @@ import {AddCommentRequest} from "../../interfaces/addCommentRequest.interface";
     CdkTextareaAutosize
   ],
   templateUrl: './comments-list.component.html',
-  styleUrl: './comments-list.component.scss'
+  styleUrls: ['./comments-list.component.scss']
 })
 export class CommentsListComponent implements OnInit, OnDestroy {
-  allComments$: Observable<Comment[]> = of([]);
-  private destroy$ = new Subject<void>();
-  commentForm!: FormGroup;
-  isSubmitting = false;
-  hasSubmissionFailed = false;
 
-  @Input() postId: number | undefined;
+  @Input() postId?: number;
+
+  commentForm!: FormGroup;
+
+  private commentsSubject = new BehaviorSubject<Comment[]>([]);
+  allComments$ = this.commentsSubject.asObservable();
+
+  private destroy$ = new Subject<void>();
 
   constructor(
     private readonly commentsService: CommentsService,
@@ -56,64 +57,43 @@ export class CommentsListComponent implements OnInit, OnDestroy {
   }
 
   private loadComments(): void {
-    if (this.postId) {
-      this.allComments$ = this.commentsService.getCommentsByPostId(this.postId);
-    }
+    if (!this.postId) return;
+
+    this.commentsService.getCommentsByPostId(this.postId)
+      .pipe(
+        catchError(() => of([])),
+        takeUntil(this.destroy$)
+      )
+      .subscribe((comments: Comment[]) => {
+        this.commentsSubject.next(comments);
+      });
   }
 
   public get content() {
     return this.commentForm.get('content');
   }
 
-  public get isLoading(): boolean {
-    return this.isSubmitting;
-  }
-
   onSubmitComment(): void {
+    const commentContent = this.content?.value.trim();
+    if (!commentContent || !this.postId) return;
 
-    const commentContent = this.commentForm.get('content')?.value.trim();
-
-    // Validation manuelle
-    if (!commentContent || this.isSubmitting || !this.postId) return;
-
-    this.resetState();
-    this.isSubmitting = true;
-
-    const addCommentRequest: AddCommentRequest = {
-      content: commentContent
-    };
+    const addCommentRequest: AddCommentRequest = { content: commentContent };
 
     this.commentsService.addComment(this.postId, addCommentRequest)
       .pipe(
         catchError((error: HttpErrorResponse) => {
           this.handleSubmissionError(error);
-          return of(null);
+          return of([] as Comment[]);
         }),
-        takeUntil(this.destroy$),
-        finalize(() => this.isSubmitting = false)
+        takeUntil(this.destroy$)
       )
-      .subscribe({
-        next: () => {
-          this.commentForm.reset();
-          this.loadComments();
-          this.snackBar.open('Commentaire ajouté avec succès', 'Fermer', {
-            duration: 3000,
-            horizontalPosition: 'center',
-            verticalPosition: 'bottom'
-          });
-        }
+      .subscribe((updatedComments: Comment[]) => {
+        this.commentsSubject.next(updatedComments);
+        this.commentForm.reset();
       });
   }
 
-  private resetState(): void {
-    this.hasSubmissionFailed = false;
-  }
-
   private handleSubmissionError(error: HttpErrorResponse): void {
-    this.hasSubmissionFailed = true;
-
-    this.commentForm.get('content')?.markAsUntouched();
-
     this.snackBar.open('Erreur lors de l\'ajout du commentaire', 'Fermer', {
       duration: 3000,
       horizontalPosition: 'center',
@@ -124,5 +104,6 @@ export class CommentsListComponent implements OnInit, OnDestroy {
   ngOnDestroy(): void {
     this.destroy$.next();
     this.destroy$.complete();
+    this.commentsSubject.complete();
   }
 }

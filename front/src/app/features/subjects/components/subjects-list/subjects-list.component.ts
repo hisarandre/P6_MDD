@@ -6,7 +6,7 @@ import { MatButtonModule } from "@angular/material/button";
 import { MatIconModule } from "@angular/material/icon";
 import { MatProgressSpinnerModule } from "@angular/material/progress-spinner";
 import { SubjectCardComponent } from "../subject-card/subject-card.component";
-import { Observable, of, switchMap, Subject, takeUntil } from "rxjs";
+import { BehaviorSubject, Subject, takeUntil, catchError, of } from "rxjs";
 import { SubjectWithStatus } from "../../interfaces/subjectWithStatus.interface";
 
 @Component({
@@ -24,7 +24,9 @@ import { SubjectWithStatus } from "../../interfaces/subjectWithStatus.interface"
   styleUrls: ['./subjects-list.component.scss']
 })
 export class SubjectsListComponent implements OnInit, OnDestroy {
-  allSubjects$: Observable<SubjectWithStatus[]> = of();
+  private subjectsSubject = new BehaviorSubject<SubjectWithStatus[]>([]);
+  allSubjects$ = this.subjectsSubject.asObservable();
+
   private destroy$ = new Subject<void>();
 
   constructor(
@@ -32,23 +34,30 @@ export class SubjectsListComponent implements OnInit, OnDestroy {
   ) { }
 
   ngOnInit(): void {
-    this.allSubjects$ = this.subjectsService.getAllSubjectsWithStatus();
+    this.subjectsService.getAllSubjectsWithStatus()
+      .pipe(
+        catchError(() => of([])),
+        takeUntil(this.destroy$)
+      )
+      .subscribe(subjects => this.subjectsSubject.next(subjects));
+  }
+
+  subscribe(subjectId: number): void {
+    this.subjectsService.subscribe(subjectId)
+      .pipe(
+        catchError(() => of(null)),
+        takeUntil(this.destroy$)
+      )
+      .subscribe((updatedSubjects: SubjectWithStatus[] | null) => {
+        if (updatedSubjects) {
+          this.subjectsSubject.next(updatedSubjects);
+        }
+      });
   }
 
   ngOnDestroy(): void {
     this.destroy$.next();
     this.destroy$.complete();
-  }
-
-  subscribe(subjectId: number): void {
-    this.subjectsService.subscribe(subjectId).pipe(
-      switchMap(() => this.subjectsService.getAllSubjectsWithStatus()),
-      takeUntil(this.destroy$)
-    ).subscribe({
-      next: (subjects) => {
-        this.allSubjects$ = of(subjects);
-      },
-      error: () => {}
-    });
+    this.subjectsSubject.complete();
   }
 }

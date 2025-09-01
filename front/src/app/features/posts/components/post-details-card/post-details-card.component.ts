@@ -14,5 +14,4 @@ import {PostDetails} from "../../interfaces/postDetails.interface";
 })
 export class PostDetailsCardComponent {
   @Input() post!: PostDetails;
-
 }

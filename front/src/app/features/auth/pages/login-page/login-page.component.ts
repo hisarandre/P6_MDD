@@ -51,10 +51,7 @@ export class LoginPageComponent implements OnInit, OnDestroy {
 
   public get email() { return this.loginForm.get('email'); }
   public get password() { return this.loginForm.get('password'); }
-
-  public get isLoading(): boolean {
-    return this.isLoggingIn;
-  }
+  public get isLoading(): boolean { return this.isLoggingIn; }
 
   public get loadingMessage(): string {
     return this.isLoggingIn ? 'Connexion en cours...' : 'Se connecter';

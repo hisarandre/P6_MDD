@@ -1,4 +1,4 @@
-import { Component, OnInit, HostListener } from '@angular/core';
+import {Component, OnInit, HostListener, CUSTOM_ELEMENTS_SCHEMA} from '@angular/core';
 import { Router, NavigationEnd } from '@angular/router';
 import { Observable, filter } from 'rxjs';
 import { SessionService } from 'src/app/core/services/session.service';
@@ -15,6 +15,7 @@ import {HttpClientModule} from "@angular/common/http";
   selector: 'app-header',
   templateUrl: './header.component.html',
   styleUrls: ['./header.component.scss'],
+  schemas: [CUSTOM_ELEMENTS_SCHEMA],
   standalone: true,
   imports: [
     CommonModule,
@@ -30,14 +31,13 @@ import {HttpClientModule} from "@angular/common/http";
   ]
 })
 export class HeaderComponent implements OnInit {
-
   isMobile: boolean = false;
   isSidenavOpen: boolean = false;
   showNavbar: boolean = true;
   isLoggedIn$: Observable<boolean>;
 
   constructor(
-    private readonly router: Router,
+    public router: Router,
     private readonly sessionService: SessionService
   ) {
     this.isLoggedIn$ = this.sessionService.$isLogged();
@@ -65,17 +65,24 @@ export class HeaderComponent implements OnInit {
     }
   }
 
+  logout(): void {
+    this.sessionService.logOut();
+    this.router.navigate(['/home']);
+    this.closeSidenav();
+  }
+
   toggleSidenav(): void {
     this.isSidenavOpen = !this.isSidenavOpen;
+    document.body.style.overflow = this.isSidenavOpen ? 'hidden' : '';
   }
 
   closeSidenav(): void {
     this.isSidenavOpen = false;
+    document.body.style.overflow = '';
   }
 
-  logout(): void {
-    this.sessionService.logOut();
-    this.router.navigate(['/home']);
+  navigateAndClose(path: string) {
+    this.router.navigate([path]);
     this.closeSidenav();
   }
 }
