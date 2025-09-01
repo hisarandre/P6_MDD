@@ -31,7 +31,7 @@ public class CommentService {
      * @return list of comments ordered by creation date
      */
     public List<Comment> getCommentsByPostId(Long postId) {
-        return commentRepository.findAllByPostIdOrderByCreatedAtDesc(postId);
+        return commentRepository.findAllByPostIdOrderByCreatedAtAsc(postId);
     }
 
     /**

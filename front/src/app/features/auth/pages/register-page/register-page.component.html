@@ -1,0 +1,101 @@
+<!-- Back button -->
+<app-sub-header
+  (back)="goBack()"
+>
+</app-sub-header>
+
+<section class="min-h-[75vh] flex flex-col items-center justify-center relative p-4">
+
+  <!-- Logo -->
+  <img
+    src="assets/logo_p6.png"
+    alt="Logo MDD"
+    class="block md:hidden w-[min(50vw,600px)] object-contain"
+    routerLink="/"
+  />
+
+  <!-- Form -->
+  <form [formGroup]="registerForm"
+        (ngSubmit)="onRegister()"
+        class="w-full max-w-md flex flex-col gap-4">
+
+    <h1 class="text-2xl font-semibold text-center">Inscription</h1>
+
+    <!-- Username -->
+    <mat-form-field appearance="outline">
+      <mat-label>Nom d'utilisateur</mat-label>
+      <input matInput type="text" formControlName="username" [readonly]="isLoading">
+      @if (username && username.touched && username.hasError('required')) {
+        <mat-error>Le nom d'utilisateur est requis</mat-error>
+      }
+      @if (username && username.touched && username.hasError('maxlength')) {
+        <mat-error>Le nom d'utilisateur doit faire moins de 50 caractères</mat-error>
+      }
+    </mat-form-field>
+
+    <!-- Email -->
+    <mat-form-field appearance="outline">
+      <mat-label>Adresse e-mail</mat-label>
+      <input matInput type="email" formControlName="email" [readonly]="isLoading" />
+      @if (email && email.touched && email.hasError('required')) {
+        <mat-error>L'adresse e-mail est requise</mat-error>
+      }
+      @if (email && email.touched && email.hasError('email')) {
+        <mat-error>L'adresse e-mail n'est pas valide</mat-error>
+      }
+      @if (email && email.touched && email.hasError('maxlength')) {
+        <mat-error>L'adresse e-mail doit faire moins de 100 caractères</mat-error>
+      }
+    </mat-form-field>
+
+    <!-- Password -->
+    <mat-form-field appearance="outline">
+      <mat-label>Mot de passe</mat-label>
+      <input matInput type="password" formControlName="password" [readonly]="isLoading" />
+      @if (password && password.touched && password.hasError('required')) {
+        <mat-error>
+          Le mot de passe requis
+        </mat-error>
+      }
+      @if (password && password.touched && password.hasError('minlength')) {
+        <mat-error>
+          Minimum 8 caractères
+        </mat-error>
+      }
+      @if (password && password.touched && password.hasError('maxlength')) {
+        <mat-error>
+          Maximum 100 caractères
+        </mat-error>
+      }
+      @if (password && password.touched && password.hasError('passwordComplexity')) {
+        <mat-error>
+          Doit contenir au moins une majuscule, une minuscule, un chiffre et un caractère spécial
+        </mat-error>
+      }
+    </mat-form-field>
+
+    <button
+      mat-raised-button
+      class="mt-8 w-auto self-center"
+      color="primary"
+      type="submit"
+      [disabled]="registerForm.invalid || isLoading"
+    >
+      {{ loadingMessage }}
+    </button>
+
+    <!-- Global errors -->
+    <div class="text-red-500 text-sm text-center mt-2">
+      @if (registerForm && registerForm.hasError('userAlreadyExists')) {
+        <div>Utilisateur déjà existant.</div>
+      }
+      @if (hasRegistrationFailed) {
+        <div>Erreur lors de l'inscription.</div>
+      }
+      @if (hasLoginFailed) {
+        <div>Erreur de connexion.</div>
+      }
+    </div>
+
+  </form>
+</section>

@@ -1,7 +1,6 @@
 import { Component } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
 import {HeaderComponent} from "./layout/components/header/header.component";
-import {BrowserAnimationsModule} from "@angular/platform-browser/animations";
 
 @Component({
   selector: 'app-root',

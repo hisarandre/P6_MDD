@@ -1,6 +1,7 @@
 package com.openclassrooms.mddapi.mapper;
 
 
+import com.openclassrooms.mddapi.dto.subject.SubjectNameResponseDto;
 import com.openclassrooms.mddapi.dto.subject.SubjectResponseDto;
 import com.openclassrooms.mddapi.dto.subject.SubjectWithSubscriptionResponseDto;
 import com.openclassrooms.mddapi.dto.user.UserResponseDto;
@@ -18,6 +19,13 @@ public interface SubjectMapper {
 
     // Entity List to DTO List
     List<SubjectResponseDto> toSubjectResponseDtoList(List<Subject> subjects);
+
+    // Entity to DTO
+    SubjectNameResponseDto toSubjectNameResponseDto(Subject subject);
+
+    // Entity List to DTO List
+    List<SubjectNameResponseDto> toSubjectNameResponseDtoList(List<Subject> subjects);
+
 
     // DTO to Entity
     Subject toSubject(SubjectResponseDto subjectDto);

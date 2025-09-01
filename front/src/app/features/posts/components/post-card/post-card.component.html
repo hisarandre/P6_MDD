@@ -1,0 +1,29 @@
+<!-- Parent container for cards -->
+<mat-card
+  class="h-full flex flex-col !bg-gray-100 cursor-pointer transition-shadow duration-200 hover:!shadow-md !shadow-none"
+  (click)="navigateToPost(post.id)">
+
+  <!-- Header with title, author and date -->
+  <mat-card-header>
+    <div class="flex flex-col justify-between w-full gap-4">
+      <!-- Title -->
+      <mat-card-title class="text-xl font-bold leading-tight transition-colors duration-200 group-hover:text-blue-600">
+        {{ post.title }}
+      </mat-card-title>
+
+      <!-- Author and date -->
+      <div class="text-sm text-gray-600 flex gap-6">
+        <span>{{ post.createdAt | date: 'dd/MM/yyyy' }}</span>
+        <span>{{ post.author }}</span>
+      </div>
+    </div>
+  </mat-card-header>
+
+  <!-- Content -->
+  <mat-card-content class="flex-1 p-6">
+    <p class="line-clamp-5">
+      {{ post.content }}
+    </p>
+  </mat-card-content>
+
+</mat-card>

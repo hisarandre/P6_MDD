@@ -1,0 +1,57 @@
+<!-- Form -->
+<form [formGroup]="meForm"
+      (ngSubmit)="onUpdate()"
+      class="w-full max-w-md flex flex-col gap-4">
+
+  <!-- Username -->
+  <mat-form-field appearance="outline">
+    <mat-label>Nom d'utilisateur</mat-label>
+    <input matInput type="text" formControlName="username" [readonly]="isLoading">
+    <mat-error *ngIf="username && username.touched && username.hasError('required')">Le nom d'utilisateur est requis</mat-error>
+    <mat-error *ngIf="username && username.touched && username.hasError('maxlength')">Le nom d'utilisateur doit faire moins de 50 caractères</mat-error>
+  </mat-form-field>
+
+  <!-- Email -->
+  <mat-form-field appearance="outline">
+    <mat-label>Adresse e-mail</mat-label>
+    <input matInput type="email" formControlName="email" [readonly]="isLoading" />
+    <mat-error *ngIf="email && email.touched && email.hasError('required')">L'adresse e-mail est requise</mat-error>
+    <mat-error *ngIf="email && email.touched && email.hasError('email')">L'adresse e-mail n'est pas valide</mat-error>
+    <mat-error *ngIf="email && email.touched && email.hasError('maxlength')">L'adresse e-mail doit faire moins de 100 caractères</mat-error>
+  </mat-form-field>
+
+  <!-- Password -->
+  <mat-form-field appearance="outline">
+    <mat-label>Mot de passe</mat-label>
+    <input matInput type="password" formControlName="password" [readonly]="isLoading" />
+    <mat-error *ngIf="password && password.touched && password.hasError('required')">
+      Le mot de passe requis
+    </mat-error>
+    <mat-error *ngIf="password && password.touched && password.hasError('minlength')">
+      Minimum 8 caractères
+    </mat-error>
+    <mat-error *ngIf="password && password.touched && password.hasError('maxlength')">
+      Maximum 100 caractères
+    </mat-error>
+    <mat-error *ngIf="password && password.touched && password.hasError('passwordComplexity')">
+      Doit contenir au moins une majuscule, une minuscule, un chiffre et un caractère spécial
+    </mat-error>
+  </mat-form-field>
+
+  <button
+    mat-raised-button
+    class="mt-8 w-auto self-center"
+    color="primary"
+    type="submit"
+    [disabled]="meForm.invalid || isLoading"
+  >
+    {{ loadingMessage }}
+  </button>
+
+  <!-- Global errors -->
+  <div class="text-red-500 text-sm text-center mt-2">
+    <div *ngIf="meForm && meForm.hasError('userAlreadyExists')">Utilisateur déjà existant.</div>
+    <div *ngIf="hasUpdateFailed">Erreur lors de la mise à jour.</div>
+  </div>
+
+</form>

@@ -1,0 +1,42 @@
+<div>
+  <!-- Comments List -->
+  @if (allComments$ | async; as allComments) {
+    <div class="space-y-4 mb-6">
+      @for (comment of allComments; track comment.id) {
+        <app-comment-card [comment]="comment" />
+      } @empty {
+        <p class="text-gray-500 text-center py-8">Aucun commentaire.</p>
+      }
+    </div>
+  }
+
+  <!-- Input new comment -->
+  <div class="mt-6">
+    <form (ngSubmit)="onSubmitComment()" [formGroup]="commentForm" class="space-y-4">
+      <div class="flex items-start gap-4">
+        <mat-form-field class="w-full" appearance="outline">
+          <textarea
+            matInput
+            formControlName="content"
+            placeholder="Écrivez ici votre commentaire"
+            rows="3"
+            cdkTextareaAutosize
+            cdkAutosizeMinRows="3"
+            cdkAutosizeMaxRows="6"
+          ></textarea>
+        </mat-form-field>
+
+        <!-- Send button -->
+        <button
+          type="submit"
+          mat-icon-button
+          color="primary"
+          [disabled]="commentForm.invalid || isSubmitting"
+          class="mt-2"
+        >
+          <mat-icon>send</mat-icon>
+        </button>
+      </div>
+    </form>
+  </div>
+</div>

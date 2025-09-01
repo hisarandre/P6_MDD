@@ -1,0 +1,13 @@
+@if (allSubscribedSubjects$ | async; as allSubscribedSubjects) {
+  <div class="grid gap-6 md:grid-cols-2">
+    @for (subject of allSubscribedSubjects; track subject.id) {
+      <app-subject-card
+        [subject]="subject"
+        [showOnlySubscribed]=true
+        (onClickButton)="unsubscribe($event)"
+      />
+    } @empty {
+      <p>La liste des thèmes est vide.</p>
+    }
+  </div>
+}

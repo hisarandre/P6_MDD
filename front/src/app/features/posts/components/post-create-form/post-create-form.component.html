@@ -1,0 +1,56 @@
+<!-- Form -->
+<form [formGroup]="postCreateForm"
+      (ngSubmit)="onCreate()"
+      class="w-full flex flex-col gap-4"
+>
+
+  <!-- Subject -->
+  <mat-form-field appearance="outline">
+    <mat-label>Thème</mat-label>
+    <mat-select formControlName="subjectId" placeholder="Sélectionner un thème">
+      @for (subject of subjects$ | async; track subject.id) {
+        <mat-option [value]="subject.id">
+          {{ subject.name }}
+        </mat-option>
+      }
+    </mat-select>
+  </mat-form-field>
+
+  <!-- Title -->
+  <mat-form-field appearance="outline">
+    <mat-label>Titre</mat-label>
+    <input matInput type="text" formControlName="title" />
+  </mat-form-field>
+
+  <!-- Content -->
+  <mat-form-field appearance="outline">
+    <mat-label>Contenu</mat-label>
+    <textarea matInput formControlName="content" rows="6"></textarea>
+    @if (content && content.hasError('minlength')) {
+      <mat-error>
+        Le contenu doit contenir au moins 10 caractères
+      </mat-error>
+    }
+    @if (content && content.hasError('maxlength')) {
+      <mat-error>
+        Le contenu ne peut pas dépasser 2000 caractères
+      </mat-error>
+    }
+    @if (content && content.hasError('required')) {
+      <mat-error>
+        Le contenu est requis
+      </mat-error>
+    }
+  </mat-form-field>
+
+  <button
+    mat-raised-button
+    class="mt-8 w-auto self-center"
+    color="primary"
+    type="submit"
+    [disabled]="postCreateForm.invalid || isLoading"
+  >
+    {{ loadingMessage }}
+  </button>
+
+</form>

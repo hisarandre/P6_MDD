@@ -82,46 +82,6 @@ public class UserController {
         return ResponseEntity.ok(responseDto);
     }
 
-    @GetMapping("/me")
-    @Operation(
-            summary = "Get current user profile",
-            description = "Retrieve the profile information of the currently authenticated user",
-            security = @SecurityRequirement(name = "bearerAuth")
-    )
-    @ApiResponses(value = {
-            @ApiResponse(
-                    responseCode = "200",
-                    description = "User profile retrieved successfully",
-                    content = @Content(
-                            mediaType = "application/json",
-                            schema = @Schema(implementation = UserResponseDto.class)
-                    )
-            ),
-            @ApiResponse(
-                    responseCode = "401",
-                    description = "Authentication required - missing or invalid JWT token",
-                    content = @Content
-            ),
-            @ApiResponse(
-                    responseCode = "500",
-                    description = "Internal server error",
-                    content = @Content
-            )
-    })
-    public ResponseEntity<UserResponseDto> getCurrentUser(
-            @Parameter(hidden = true) JwtAuthenticationToken jwtAuthenticationToken
-    ) {
-        log.info("Retrieving current user profile");
-
-        User user = authService.getAuthenticatedUser(jwtAuthenticationToken);
-        UserResponseDto responseDto = userMapper.toUserResponseDto(user);
-
-        log.info("Successfully retrieved profile for user: {}", user.getEmail());
-
-        return ResponseEntity.ok(responseDto);
-    }
-
-
     @PutMapping("/me")
     @Operation(
             summary = "Update current user profile",

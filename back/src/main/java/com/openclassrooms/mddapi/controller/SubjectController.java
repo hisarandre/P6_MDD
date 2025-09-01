@@ -1,5 +1,6 @@
 package com.openclassrooms.mddapi.controller;
 
+import com.openclassrooms.mddapi.dto.subject.SubjectNameResponseDto;
 import com.openclassrooms.mddapi.dto.subject.SubjectResponseDto;
 import com.openclassrooms.mddapi.dto.subject.SubjectWithSubscriptionResponseDto;
 import com.openclassrooms.mddapi.entity.Subject;
@@ -39,7 +40,7 @@ public class SubjectController {
     @GetMapping
     @Operation(
             summary = "Get all available subjects",
-            description = "Retrieve a list of all available subjects in the system. " +
+            description = "Retrieve a list of all available subjects. " +
                     "This endpoint requires authentication to access."
     )
     @ApiResponses(value = {
@@ -70,6 +71,43 @@ public class SubjectController {
         List<SubjectResponseDto> response = subjectMapper.toSubjectResponseDtoList(subjects);
 
         log.info("Successfully retrieved {} subjects", response.size());
+        return ResponseEntity.ok(response);
+    }
+
+    @GetMapping("/names")
+    @Operation(
+            summary = "Get all available subject names",
+            description = "Retrieve a list of all available subjects in the system. " +
+                    "This endpoint requires authentication to access."
+    )
+    @ApiResponses(value = {
+            @ApiResponse(
+                    responseCode = "200",
+                    description = "Successfully retrieved all subjects",
+                    content = @Content(
+                            mediaType = "application/json",
+                            array = @ArraySchema(schema = @Schema(implementation = SubjectResponseDto.class))
+                    )
+            ),
+            @ApiResponse(
+                    responseCode = "401",
+                    description = "Unauthorized - JWT token is missing or invalid",
+                    content = @Content
+            ),
+            @ApiResponse(
+                    responseCode = "500",
+                    description = "Internal server error during subjects retrieval",
+                    content = @Content
+            )
+    })
+    @SecurityRequirement(name = "Bearer Authentication")
+    public ResponseEntity<List<SubjectNameResponseDto>> getAllSubjectNames() {
+        log.info("Request to get all subject names");
+
+        List<Subject> subjects = subjectService.findAll();
+        List<SubjectNameResponseDto> response = subjectMapper.toSubjectNameResponseDtoList(subjects);
+
+        log.info("Successfully retrieved {} subject names", response.size());
         return ResponseEntity.ok(response);
     }
 
