@@ -60,6 +60,7 @@ $custom-theme: mat.m2-define-light-theme((
 html {
   line-height: 1.5;
   -webkit-text-size-adjust: 100%;
+  scrollbar-gutter: stable;
 }
 
 body {

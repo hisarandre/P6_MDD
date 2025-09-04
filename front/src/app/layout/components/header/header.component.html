@@ -1,9 +1,8 @@
 <div class="h-screen bg-white relative">
 
-  <!-- Mobile Drawer -->
-  @if(showNavbar && isMobile && (isLoggedIn$ | async)) {
-
-    <!-- Overlay -->
+  <!-- Mobile Navigation Drawer -->
+  @if(showNavbar && isMobile) {
+    <!-- Backdrop Overlay -->
     @if(isSidenavOpen) {
       <div
         class="fixed inset-0 bg-black bg-opacity-50 z-40 transition-opacity duration-300"
@@ -11,120 +10,118 @@
       </div>
     }
 
-    <!-- Drawer Panel -->
-    <div
-      class="fixed inset-y-0 right-0 z-50 w-64 transform transition-transform duration-300 ease-in-out"
-      [style.transform]="isSidenavOpen ? 'translateX(0)' : 'translateX(100%)'">
+    <!-- Drawer Content -->
+    <aside
+      class="fixed inset-y-0 right-0 z-50 w-64 drawer-panel"
+      [class.drawer-open]="isSidenavOpen">
 
       <div class="bg-white shadow-xl flex flex-col h-full">
-
-        <!-- Links -->
-        <div class="flex-1 flex flex-col p-4 space-y-4">
+        <!-- Navigation Links -->
+        <nav class="flex-1 flex flex-col p-4 space-y-4 text-right font-normal text-xl hover:bg-gray-50 w-full bg-transparent border-none">
           <button
-            class="text-right text-red-700 !font-bold !text-lg !bg-transparent !border-none"
-            (click)="logout(); closeSidenav()">
+            class="text-right text-red-700 font-bold text-lg bg-transparent border-none cursor-pointer"
+            (click)="handleLogoutAndClose()">
             Se déconnecter
           </button>
 
-          <button
-            class="text-right font-medium !text-xl hover:bg-gray-50 w-full !bg-transparent !border-none"
-            [class.text-primary]="router.url === '/posts'"
-            (click)="navigateAndClose('/posts')">
+          <a
+            routerLink="/posts"
+            routerLinkActive="active"
+            [routerLinkActiveOptions]="{ exact: true }"
+            class="no-underline visited:text-inherit"
+            (click)="closeSidenav()">
             Articles
-          </button>
+          </a>
 
-          <button
-            class="text-right font-medium !text-xl hover:bg-gray-50 w-full !bg-transparent !border-none"
-            [class.text-primary]="router.url === '/subjects'"
-            (click)="navigateAndClose('/subjects')">
+          <a
+            routerLink="/subjects"
+            routerLinkActive="active"
+            class="no-underline visited:text-inherit"
+            (click)="closeSidenav()">
             Thèmes
-          </button>
-        </div>
+          </a>
+        </nav>
 
-        <!-- Footer / Account -->
+        <!-- User Profile -->
         <div class="p-4 flex justify-end">
-          <button
-            (click)="navigateAndClose('/me')"
-            class="rounded-full w-12 h-12 flex items-center justify-center border-2 transition-colors"
-            [ngClass]="{
-              'bg-gray-200 border-primary': router.url === '/me',
-              'bg-gray-200 border-transparent hover:bg-gray-300': router.url !== '/me'
-            }"
-          >
-            <mat-icon
-              class="text-2xl block leading-none"
-              [ngClass]="{'text-primary': router.url === '/me', 'text-gray-700': router.url !== '/me'}"
-            >
-              person
-            </mat-icon>
-          </button>
+          <a
+            routerLink="/me"
+            routerLinkActive="profile-active-link"
+            (click)="closeSidenav()">
+            <button class="rounded-full w-12 h-12 flex items-center justify-center border-2 transition-colors !bg-gray-200 border-transparent hover:bg-gray-300">
+              <mat-icon class="text-2xl block leading-none text-gray-700">person</mat-icon>
+            </button>
+          </a>
         </div>
-
       </div>
-    </div>
+    </aside>
   }
 
-  <!-- Main Content -->
+  <!-- Main Layout -->
   <div class="flex flex-col">
-
-    <!-- Toolbar / Navbar -->
+    <!-- Top Navigation Bar -->
     @if(showNavbar) {
-      <mat-toolbar class="border-b border-gray-300 flex justify-between items-center px-4 h-14 z-10 sticky top-0">
-        <!-- Logo -->
-        <div class="navbar-brand flex items-center h-full cursor-pointer" routerLink="/">
-          <img src="../../../../assets/logo_p6.png" alt="Logo MDD" class="h-full w-auto object-contain"/>
+      <header class="bg-white flex justify-between items-center px-4 h-14">
+        <div class="flex items-center h-full cursor-pointer" routerLink="/">
+          <img
+            src="../../../../assets/logo_p6.png"
+            alt="Logo MDD"
+            class="h-full w-auto object-contain"/>
         </div>
 
-        <!-- Desktop navigation -->
-        <div class="hidden md:flex space-x-4 items-center">
+        <!-- Desktop Nav -->
+        <nav class="hidden md:flex space-x-4 items-center">
           @if(isLoggedIn$ | async) {
-            <a
+            <button
               mat-button
-              (click)="logout()"
-              class="!text-red-700 font-medium"
-            >
+              class="!text-red-700 font-bold"
+              (click)="logout()">
               Se déconnecter
-            </a>
+            </button>
+
             <a
               mat-button
               routerLink="posts"
               routerLinkActive="active-link"
               [routerLinkActiveOptions]="{ exact: true }"
-            >
+              class="font-medium">
               Articles
             </a>
             <a
               mat-button
               routerLink="subjects"
               routerLinkActive="active-link"
-            >
+              class="font-medium">
               Thèmes
             </a>
-            <a routerLink="me" routerLinkActive="active-link">
-              <button
-                mat-icon-button
-                class="rounded-full w-10 h-10 flex items-center justify-center !p-0 !bg-gray-200 !text-gray-700 box-border"
-              >
+
+            <a
+              routerLink="/me"
+              routerLinkActive="profile-active-link"
+              class="font-medium">
+              <button mat-icon-button class="rounded-full w-10 h-10 flex items-center justify-center !p-0 !bg-gray-200 !text-gray-700 box-border">
                 <mat-icon class="text-2xl block leading-none pt-1">person</mat-icon>
               </button>
             </a>
-
           }
-        </div>
+        </nav>
 
-        <!-- Mobile menu button -->
+        <!-- Mobile Menu Toggle -->
         @if(isMobile && (isLoggedIn$ | async)) {
-          <button mat-icon-button class="md:hidden text-gray-700" (click)="toggleSidenav()">
+          <button
+            mat-icon-button
+            class="md:hidden text-gray-700"
+            (click)="toggleSidenav()"
+            [attr.aria-label]="isSidenavOpen ? 'Fermer le menu' : 'Ouvrir le menu'">
             <mat-icon>{{ isSidenavOpen ? 'close' : 'menu' }}</mat-icon>
           </button>
         }
-      </mat-toolbar>
+      </header>
     }
 
-    <!-- Page content -->
-    <div class="flex-1 p-4 bg-gray-50">
+    <!-- Main Content -->
+    <main class="flex-1 p-4">
       <router-outlet></router-outlet>
-    </div>
-
+    </main>
   </div>
 </div>
