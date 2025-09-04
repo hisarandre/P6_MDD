@@ -1,9 +1,9 @@
 import { Injectable } from '@angular/core';
 import { CanActivate, Router } from '@angular/router';
 import { Observable, of } from 'rxjs';
-import { catchError, map } from 'rxjs/operators';
-import {SessionService} from "../services/session.service";
-import {AuthService} from "../../features/auth/services/auth.service";
+import { map, catchError } from 'rxjs/operators';
+import { SessionService } from '../services/session.service';
+import { AuthService } from '../../features/auth/services/auth.service';
 
 @Injectable({
   providedIn: 'root'
@@ -16,31 +16,30 @@ export class AuthRedirectGuard implements CanActivate {
   ) {}
 
   canActivate(): Observable<boolean> | boolean {
-    // Check if user is already logged in
+    // Already logged in
     if (this.sessionService.isUserLoggedIn()) {
       this.router.navigate(['/posts']);
       return false;
     }
 
-    // Check if there is a token in localStorage
+    // Check token in localStorage
     const token = localStorage.getItem('token');
     if (!token) {
-      return true;
+      return true; // user not logged in so allow access
     }
 
-    // Attempt auto-login with existing token
+    // Attempt auto-login
     return this.authService.autoLogin(token).pipe(
-      map((user) => {
+      map(user => {
         if (user) {
           this.router.navigate(['/posts']);
           return false;
         }
         return true;
       }),
-      catchError((error) => {
-        // Token expired or invalid, clear it
+      catchError(err => {
         this.sessionService.logOut();
-        return of(true);
+        return of(true); // allow access to login/home
       })
     );
   }
