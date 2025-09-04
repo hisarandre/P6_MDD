@@ -1,0 +1,489 @@
+{
+	"info": {
+		"_postman_id": "1f11a6bb-c195-4153-ab67-b19eda15875b",
+		"name": "MDD",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "23648536",
+		"_collection_link": "https://piba-projects.postman.co/workspace/PIBA-projects-Workspace~541cef58-cf60-4e0f-bdf4-c6f84697848e/collection/23648536-1f11a6bb-c195-4153-ab67-b19eda15875b?action=share&source=collection_link&creator=23648536"
+	},
+	"item": [
+		{
+			"name": "auth",
+			"item": [
+				{
+					"name": "register",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"email\": \"test@mdd.com\",\n    \"username\": \"User Mdd\",\n    \"password\": \"Test!123\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseURL}}/api/auth/register",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"api",
+								"auth",
+								"register"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "login",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"email\": \"test@mdd.com\",\n    \"password\": \"Test!123\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseURL}}/api/auth/login",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"api",
+								"auth",
+								"login"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "me",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJtZGQiLCJzdWIiOiJ0ZXN0QG1kZC5jb20iLCJleHAiOjE3NTY1MTg1NzksImlhdCI6MTc1NjQzMjE3OX0.c5CVXS6R7a8G4fdtXjFcW5Y9FX92fDkUGOsXT9PSVxo",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseURL}}/api/auth/me",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"api",
+								"auth",
+								"me"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "subjects",
+			"item": [
+				{
+					"name": "getAll",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJtZGQiLCJzdWIiOiJ1c2VyQHRlc3QuY29tIiwiZXhwIjoxNzU2Nzk3MjEyLCJpYXQiOjE3NTY3MTA4MTJ9.4uLnl9ulvHn_nO57PPvsR2A9EE-ZLFHcoZqoQxOxqv8",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseURL}}/api/subjects",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"api",
+								"subjects"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "subscribed",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJtZGQiLCJzdWIiOiJ1c2VyQHRlc3QuY29tIiwiZXhwIjoxNzU2Nzk3MjEyLCJpYXQiOjE3NTY3MTA4MTJ9.4uLnl9ulvHn_nO57PPvsR2A9EE-ZLFHcoZqoQxOxqv8",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseURL}}/api/subjects/subscribed",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"api",
+								"subjects",
+								"subscribed"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "subscriptions/status",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJtZGQiLCJzdWIiOiJ0ZXN0QG1kZC5jb20iLCJleHAiOjE3NTY0Njk2MDQsImlhdCI6MTc1NjM4MzIwNH0.ByFd6D_25zgUhWNRwq1Ahpm4BnfszVNRDXYVwVMcNg4",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseURL}}/api/subjects/subscriptions/status",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"api",
+								"subjects",
+								"subscriptions",
+								"status"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "subscribe",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJtZGQiLCJzdWIiOiJ0ZXN0QG1kZC5jb20iLCJleHAiOjE3NTY0Njk2MDQsImlhdCI6MTc1NjM4MzIwNH0.ByFd6D_25zgUhWNRwq1Ahpm4BnfszVNRDXYVwVMcNg4",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"url": {
+							"raw": "{{baseURL}}/api/subjects/1/subscribe",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"api",
+								"subjects",
+								"1",
+								"subscribe"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "unsubscribe",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJtZGQiLCJzdWIiOiJ0ZXN0QG1kZC5jb20iLCJleHAiOjE3NTY2MTc3MzksImlhdCI6MTc1NjUzMTMzOX0.yzKwUaBQfclKQrLbXFn-kI3ClK6bJfiBH637UJpFI3Y",
+									"type": "string"
+								}
+							]
+						},
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{baseURL}}/api/subjects/1/unsubscribe",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"api",
+								"subjects",
+								"1",
+								"unsubscribe"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "users",
+			"item": [
+				{
+					"name": "update",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJtZGQiLCJzdWIiOiJ0ZXN0QG1kZC5jb20iLCJleHAiOjE3NTY1MTg1NzksImlhdCI6MTc1NjQzMjE3OX0.c5CVXS6R7a8G4fdtXjFcW5Y9FX92fDkUGOsXT9PSVxo",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"username\": \"test Modify\",\r\n    \"email\": \"test@mdd.com\",\r\n    \"password\": \"Test!123\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseURL}}/api/users/me",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"api",
+								"users",
+								"me"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "comments",
+			"item": [
+				{
+					"name": "post",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJtZGQiLCJzdWIiOiJ0ZXN0QG1kZC5jb20iLCJleHAiOjE3NTY1MTg1NzksImlhdCI6MTc1NjQzMjE3OX0.c5CVXS6R7a8G4fdtXjFcW5Y9FX92fDkUGOsXT9PSVxo",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseURL}}/api/comments/post/1",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"api",
+								"comments",
+								"post",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "add",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJtZGQiLCJzdWIiOiJ0ZXN0QG1kZC5jb20iLCJleHAiOjE3NTY1MTg1NzksImlhdCI6MTc1NjQzMjE3OX0.c5CVXS6R7a8G4fdtXjFcW5Y9FX92fDkUGOsXT9PSVxo",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"content\": \"Un commentaire ici\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseURL}}/api/comments/post/1",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"api",
+								"comments",
+								"post",
+								"1"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "posts",
+			"item": [
+				{
+					"name": "subscribed",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJtZGQiLCJzdWIiOiJ0ZXN0QG1kZC5jb20iLCJleHAiOjE3NTY1MTg1NzksImlhdCI6MTc1NjQzMjE3OX0.c5CVXS6R7a8G4fdtXjFcW5Y9FX92fDkUGOsXT9PSVxo",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseURL}}/api/posts/subscribed?sort=asc",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"api",
+								"posts",
+								"subscribed"
+							],
+							"query": [
+								{
+									"key": "sort",
+									"value": "asc"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "getDetails",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJtZGQiLCJzdWIiOiJ1c2VyQHRlc3QuY29tIiwiZXhwIjoxNzU2Nzk3MjEyLCJpYXQiOjE3NTY3MTA4MTJ9.4uLnl9ulvHn_nO57PPvsR2A9EE-ZLFHcoZqoQxOxqv8",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseURL}}/api/posts/1",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"api",
+								"posts",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "create",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJtZGQiLCJzdWIiOiJ0ZXN0QG1kZC5jb20iLCJleHAiOjE3NTY2ODkxMDUsImlhdCI6MTc1NjYwMjcwNX0.zijBJRj5YMz17t_pRAMdhkYGqwS6PDUi_wq71wRv9ps",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"title\": \"Un titre\",\r\n    \"content\": \"Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut laoreet pulvinar mauris vitae efficitur. Nullam volutpat ac arcu nec dictum. Maecenas volutpat, risus a tristique blandit, quam nisi tempor nulla, a semper erat lacus eget ligula. Maecenas at est eu elit faucibus accumsan id pretium nisi. Nam et neque congue, tincidunt arcu vel, ultricies purus. Etiam ullamcorper iaculis luctus. Integer tempor ex id eros pharetra bibendum. Nulla viverra commodo lectus sit amet bibendum. Fusce interdum justo rhoncus augue tincidunt rutrum. Aliquam laoreet ultrices euismod. Nunc faucibus efficitur condimentum. Pellentesque in ultrices ex, vitae interdum massa.\",\r\n    \"subjectId\": 2\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseURL}}/api/posts",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"api",
+								"posts"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	],
+	"variable": [
+		{
+			"key": "baseURL",
+			"value": "",
+			"type": "default"
+		}
+	]
+}

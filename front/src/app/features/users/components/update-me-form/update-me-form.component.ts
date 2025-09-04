@@ -3,16 +3,13 @@ import {
   FormBuilder,
   FormGroup,
   Validators,
-  AbstractControl,
-  ValidationErrors,
   ReactiveFormsModule
 } from '@angular/forms';
-import { Router, RouterLink, RouterOutlet } from '@angular/router';
+import { Router } from '@angular/router';
 import { Subject, finalize, takeUntil, catchError, of } from 'rxjs';
 import { HttpErrorResponse } from '@angular/common/http';
 import { UsersService } from '../../services/users.service';
 import { MatIconModule } from '@angular/material/icon';
-import { NgIf } from '@angular/common';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatButtonModule } from '@angular/material/button';
@@ -26,7 +23,6 @@ import {passwordValidator} from "../../../../shared/validators/password.validato
   standalone: true,
   imports: [
     ReactiveFormsModule,
-    NgIf,
     MatFormFieldModule,
     MatInputModule,
     MatIconModule,
@@ -36,11 +32,10 @@ import {passwordValidator} from "../../../../shared/validators/password.validato
   styleUrl: './update-me-form.component.scss'
 })
 export class UpdateMeFormComponent implements OnInit, OnDestroy {
-  public meForm!: FormGroup;
-  public currentUser: User | null = null;
-
-  public isLoading = false;
-  public hasUpdateFailed = false;
+  meForm!: FormGroup;
+  currentUser: User | null = null;
+  isLoading = false;
+  hasUpdateFailed = false;
 
   private destroy$ = new Subject<void>();
 
@@ -52,11 +47,11 @@ export class UpdateMeFormComponent implements OnInit, OnDestroy {
   ) {}
 
   ngOnInit(): void {
-    this.initializeForm();
+    this.initForm();
     this.loadCurrentUser();
   }
 
-  private initializeForm(): void {
+  private initForm(): void {
     this.meForm = this.formBuilder.group({
       username: ['', [Validators.required, Validators.maxLength(50)]],
       email: ['', [Validators.required, Validators.email, Validators.maxLength(100)]],
@@ -68,11 +63,11 @@ export class UpdateMeFormComponent implements OnInit, OnDestroy {
     const user = this.sessionService.getCurrentUser();
     if (user) {
       this.currentUser = user;
-      this.populateForm(user);
+      this.completeForm(user);
     }
   }
 
-  private populateForm(user: User): void {
+  private completeForm(user: User): void {
     this.meForm.patchValue({
       username: user.username,
       email: user.email,
@@ -86,12 +81,6 @@ export class UpdateMeFormComponent implements OnInit, OnDestroy {
 
   public get loadingMessage(): string {
     return this.isLoading ? 'Mise à jour...' : 'Sauvegarder';
-  }
-
-  public goBack(): void {
-    if (!this.isLoading) {
-      this.router.navigate(['/posts']).catch(console.error);
-    }
   }
 
   public onUpdate(): void {

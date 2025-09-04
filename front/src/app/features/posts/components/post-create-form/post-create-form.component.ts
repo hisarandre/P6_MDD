@@ -1,4 +1,4 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, OnDestroy, OnInit} from '@angular/core';
 import {FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators} from "@angular/forms";
 import {MatButton} from "@angular/material/button";
 import {MatError, MatFormField, MatInput, MatLabel} from "@angular/material/input";
@@ -21,7 +21,6 @@ import {MatSnackBar} from "@angular/material/snack-bar";
     MatButton,
     MatFormField,
     MatInput,
-    MatLabel,
     ReactiveFormsModule,
     MatOption,
     MatSelect,
@@ -31,12 +30,11 @@ import {MatSnackBar} from "@angular/material/snack-bar";
   templateUrl: './post-create-form.component.html',
   styleUrl: './post-create-form.component.scss'
 })
-export class PostCreateFormComponent implements OnInit {
-  public postCreateForm!: FormGroup;
-  public subjects$: Observable<SubjectName[]> = of([]);
-
-  public isCreating = false;
-  public hasCreationFailed = false;
+export class PostCreateFormComponent implements OnInit, OnDestroy {
+  postCreateForm!: FormGroup;
+  subjects$: Observable<SubjectName[]> = of([]);
+  isCreating = false;
+  hasCreationFailed = false;
 
   private destroy$ = new Subject<void>();
 
@@ -55,12 +53,9 @@ export class PostCreateFormComponent implements OnInit {
       content: ['', [Validators.required, Validators.minLength(10), Validators.maxLength(2000)]],
     });
 
-    // Load available subjects
     this.subjects$ = this.subjectsService.getSubjectsForSelect();
   }
 
-  public get subjectId() { return this.postCreateForm.get('subjectId'); }
-  public get title() { return this.postCreateForm.get('title'); }
   public get content() { return this.postCreateForm.get('content'); }
 
   public get isLoading(): boolean {
@@ -68,7 +63,7 @@ export class PostCreateFormComponent implements OnInit {
   }
 
   public get loadingMessage(): string {
-    return this.isCreating ? 'Création en cours...' : 'Créer l\'article';
+    return this.isCreating ? 'Création en cours...' : 'Créer';
   }
 
   public onCreate(): void {
@@ -109,7 +104,17 @@ export class PostCreateFormComponent implements OnInit {
   private handleCreationError(error: HttpErrorResponse): void {
     this.hasCreationFailed = true;
     if (error.status === 400) {
-      this.postCreateForm.setErrors({ invalidData: true });
+      this.snackBar.open('Les données saisies sont invalides.', 'Fermer', {
+        duration: 4000,
+        horizontalPosition: 'center',
+        verticalPosition: 'bottom'
+      });
+    } else {
+      this.snackBar.open('Erreur lors de la création du post.', 'Fermer', {
+        duration: 4000,
+        horizontalPosition: 'center',
+        verticalPosition: 'bottom'
+      });
     }
   }
 

@@ -1,9 +1,9 @@
 import { Injectable } from '@angular/core';
 import { CanActivate, Router } from '@angular/router';
 import { Observable, of } from 'rxjs';
-import { catchError, map } from 'rxjs/operators';
-import {SessionService} from "../services/session.service";
-import {AuthService} from "../../features/auth/services/auth.service";
+import { map, catchError } from 'rxjs/operators';
+import { SessionService } from '../services/session.service';
+import { AuthService } from '../../features/auth/services/auth.service';
 
 @Injectable({
   providedIn: 'root'
@@ -16,33 +16,30 @@ export class AuthRedirectGuard implements CanActivate {
   ) {}
 
   canActivate(): Observable<boolean> | boolean {
-    // Check if user is already logged in
+    // Already logged in
     if (this.sessionService.isUserLoggedIn()) {
       this.router.navigate(['/posts']);
-      return false; // Block access to current route
+      return false;
     }
 
-    // Check if there is a token in localStorage
+    // Check token in localStorage
     const token = localStorage.getItem('token');
     if (!token) {
-      return true; // No token, allow access to login/register pages
+      return true; // user not logged in so allow access
     }
 
-    // Attempt auto-login with existing token
-    return this.authService.performAutoLogin(token).pipe(
-      map((user) => {
+    // Attempt auto-login
+    return this.authService.autoLogin(token).pipe(
+      map(user => {
         if (user) {
-          // Auto-login successful, redirect to posts
           this.router.navigate(['/posts']);
-          return false; // Block access to current route
+          return false;
         }
-        return true; // Auto-login failed, allow access to current route
+        return true;
       }),
-      catchError((error) => {
-        // Token expired or invalid, clear it
-        console.log('Token invalid or expired, removing from localStorage');
+      catchError(err => {
         this.sessionService.logOut();
-        return of(true); // Allow access to current route
+        return of(true); // allow access to login/home
       })
     );
   }

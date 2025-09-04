@@ -1,25 +1,148 @@
-# P6-Full-Stack-reseau-dev
+# P6 – Monde de dev
 
-## Front
+## 📌 Description
 
-This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 14.1.3.
+MDD is a full-stack platform designed to provide users interested in programming a personalized newsfeed full of relevant content.
 
-Don't forget to install your node_modules before starting (`npm install`).
+## 🚀 Features
+- **Authentication:** Sign-up and login with JWT
+- **User management:** Profile information and update
+- **Subjects:** Consulting subjects and subscribe/unsubscribe to them
+- **Posts:** Create post linked to a specific subject
+- **Comments:** Add comments linked to posts
+- **Security:** Endpoints protected with JWT tokens and guards
+- **API documentation:** Swagger / OpenAPI integration
 
-### Development server
+## 🛠️ Technologies Used
+**Backend:**
+- Java 21
+- Spring Boot (Web, Security, Data JPA)
+- JWT (JSON Web Tokens)
+- MySQL
+- Maven
+- Lombok
+- MapStruct
+- Swagger / OpenAPI
 
-Run `ng serve` for a dev server. Navigate to `http://localhost:4200/`. The application will automatically reload if you change any of the source files.
+**Frontend:**
+- Angular 20
+- Angular Material
+- Tailwind CSS
+- TypeScript
+- RxJS
 
-### Build
+## 🛠️ Architecture back end
 
-Run `ng build` to build the project. The build artifacts will be stored in the `dist/` directory.
+```bash
+src/
+└── main/
+    ├── java/com/openclassroom/mddapi/
+    │   ├── configuration/       # Security and Swagger configuration
+    │   ├── controller/          # REST controllers
+    │   ├── dto/                 # Request/response DTOs
+    │   ├── entity/              # JPA entities
+    │   ├── exception/           # Custom exception handling
+    │   ├── mapper/              # MapStruct mappers
+    │   ├── repository/          # JPA repositories
+    │   └── service/             # Business logic services
+    └── resources/
+        ├── application.properties
+        └── schema.sql
+```
 
-### Where to start
 
-As you may have seen if you already started the app, a simple home page containing a logo, a title and a button is available. If you take a look at its code (in the `home.component.html`) you will see that an external UI library is already configured in the project.
 
-This library is `@angular/material`, it's one of the most famous in the angular ecosystem. As you can see on their docs (https://material.angular.io/), it contains a lot of highly customizable components that will help you design your interfaces quickly.
+![schema-data.png](back/src/main/resources/schema-data.png)
 
-Note: I recommend to use material however it's not mandatory, if you prefer you can get rid of it.
 
-Good luck!
+## 🛠️ Architecture front end
+
+```bash
+src/
+└── app/
+    ├── core/                     # Global services and utilities
+    │   ├── guards/               # Navigation/auth guards
+    │   ├── interceptors/         # HTTP interceptors
+    │   ├── interfaces/           # Shared TypeScript interfaces
+    │   └── services/             # Reusable services
+    │
+    ├── features/                 # Main features
+    │   ├── auth/                 # Authentication and user management
+    │   ├── comments/             # Comment management
+    │   ├── posts/                # Post management
+    │   ├── subjects/             # Subject management
+    │   └── users/                # User management
+    │
+    ├── layout/                   # Global layout and shared components
+    │
+    └── shared/                   # Code shared across multiple modules
+        └── validators/           # Reusable validators
+
+```
+
+## 🚀 Installation
+
+### Setup & Run
+
+#### 1. Clone the repository:
+
+```bash
+   git clone https://github.com/hisarandre/P6_mdd.git
+   cd P6_mdd
+```
+
+#### 2. Configure the database:
+
+- Make sure MySQL is installed and running
+- Log in to your MySQL database
+- Create a database for the application `CREATE DATABASE mdd;`
+- Import the schema.sql file located in the resources folder at the project root to initialize the schema
+- Verify that the database contains the necessary tables after the import.
+
+#### 3. Configure the environment:
+
+Create a .env file in the root of your project by copying from the example file:
+
+```bash
+DATABASE_URL=your_database_url_here
+DB_USERNAME=your_database_username_here
+DB_PASSWORD=your_database_password_here
+SECRET_KEY_JWT=your_jwt_secret_key_here
+```
+
+#### To make sure you use these environment variables when running the app:
+
+- Open your project in IntelliJ IDEA.
+- Go to Run > Edit Configurations…
+- Select your Spring Boot run configuration (or create a new one).
+- In the Environment variables field, click the ... button.
+- You can manually add each variable from your .env file, or if you installed the EnvFile plugin, you can select your .env file to load variables automatically.
+- Apply and save the configuration.
+
+#### 4. Launch back end
+
+```bash
+cd back
+mvn clean install
+mvn spring-boot:run
+```
+
+#### 5. Launch the frontend:
+```bash
+cd front
+npm install
+ng serve
+```
+
+## 🗂️ Testing
+
+- **User test:**
+login: user@test.com
+password: Test!123
+
+
+- **Postman Collection:**
+  A Postman collection is included in the project to test endpoints. It is located in the backend resources/mdd.postman_collection in the back end file.
+
+## 👉 API Documentation
+Swagger UI is available here after starting up: http://localhost:8080/swagger-ui.html

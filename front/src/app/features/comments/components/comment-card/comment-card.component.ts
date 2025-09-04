@@ -9,5 +9,4 @@ import {Comment} from "../../interfaces/comment.interface";
 })
 export class CommentCardComponent {
   @Input() comment!: Comment;
-
 }

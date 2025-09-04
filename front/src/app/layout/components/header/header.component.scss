@@ -1,16 +1,32 @@
-.mat-toolbar {
-  background-color: #F9FAFB !important;
-  border-bottom: 1px solid #d1d5db !important;
+@use '../../../../styles/variables' as vars;
+
+header {
+  border-bottom: 1px solid vars.$border-gray !important;
 }
 
 .active-link {
-  color: #7763c5 !important;
+  color: vars.$primary-color !important;
 }
 
-.nav-icon {
-  @apply text-gray-500 transition-colors duration-200;
+.drawer-panel {
+  transition: transform vars.$transition-duration ease-in-out;
+  transform: translateX(100%);
+
+  &.drawer-open {
+    transform: translateX(0);
+  }
 }
 
-.active-link .nav-icon {
-  color: #7763c5 !important;
+.active {
+  color: vars.$primary-color;
+}
+
+.profile-active-link > button {
+  padding-bottom: 2px;
+  background-color: vars.$light-gray;
+  border: 2px solid vars.$primary-color;
+
+  mat-icon {
+    color: vars.$primary-color;
+  }
 }

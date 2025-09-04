@@ -16,7 +16,7 @@ export class CommentsService {
     return this.httpClient.get<Comment[]>(`${this.pathService}/post/${postId}`);
   }
 
-  addComment(postId: number, createRequest: AddCommentRequest): Observable<void> {
-    return this.httpClient.post<void>(`${this.pathService}/post/${postId}`, createRequest);
+  addComment(postId: number, createRequest: AddCommentRequest): Observable<Comment[]> {
+    return this.httpClient.post<Comment[]>(`${this.pathService}/post/${postId}`, createRequest);
   }
 }

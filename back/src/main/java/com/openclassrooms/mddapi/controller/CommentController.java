@@ -91,8 +91,7 @@ public class CommentController {
     @PostMapping("/post/{postId}")
     @Operation(
             summary = "Add a comment to a post",
-            description = "Create a new comment for a post. Requires authentication. " +
-                    "The comment will be associated with the authenticated user as the author.",
+            description = "Create a new comment for a post. Requires authentication. ",
             security = @SecurityRequirement(name = "bearerAuth")
     )
     @ApiResponses(value = {
@@ -127,7 +126,7 @@ public class CommentController {
                     content = @Content
             )
     })
-    public ResponseEntity<Void> addComment(
+    public ResponseEntity<List<CommentResponseDto>> addComment(
             @Parameter(hidden = true) JwtAuthenticationToken jwtAuthenticationToken,
             @Parameter(
                     description = "ID of the post to add the comment to",
@@ -146,8 +145,11 @@ public class CommentController {
         User author = authService.getAuthenticatedUser(jwtAuthenticationToken);
         commentService.addComment(postId, commentRequestDto, author);
 
+        List<Comment> comments = commentService.getCommentsByPostId(postId);
+        List<CommentResponseDto> commentDtos = commentMapper.toCommentResponseDtoList(comments);
+
         log.info("Successfully added comment to post ID: {} by user: {}", postId, author.getEmail());
 
-        return ResponseEntity.status(HttpStatus.CREATED).build();
+        return ResponseEntity.ok(commentDtos);
     }
 }

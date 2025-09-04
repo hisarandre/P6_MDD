@@ -1,6 +1,6 @@
 import { Routes } from '@angular/router';
-import {AuthRedirectGuard} from "./core/guards/auth-redirect.guard";
-import {AuthGuard} from "./core/guards/auth.guard";
+import { AuthRedirectGuard } from "./core/guards/auth-redirect.guard";
+import { AuthGuard } from "./core/guards/auth.guard";
 
 export const routes: Routes = [
   {
@@ -28,7 +28,7 @@ export const routes: Routes = [
 
   {
     path: 'me',
-    loadComponent: () => import('./features/me/pages/me-page/me-page.component').then(c => c.MePageComponent),
+    loadComponent: () => import('./features/users/pages/me-page/me-page.component').then(c => c.MePageComponent),
     canActivate: [AuthGuard]
   },
   {
@@ -40,5 +40,14 @@ export const routes: Routes = [
     path: 'subjects',
     loadComponent: () => import('./features/subjects/pages/subjects-page/subjects-page.component').then(c => c.SubjectsPageComponent),
     canActivate: [AuthGuard]
+  },
+
+  // Not found page
+
+  {
+    path: '**',
+    loadComponent: () =>
+      import('./features/not-found/pages/not-found-page/not-found-page.component')
+        .then(c => c.NotFoundPageComponent)
   }
 ];
