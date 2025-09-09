@@ -101,23 +101,20 @@ src/
 
 #### 3. Configure the environment:
 
-Create a .env file in the root of your project by copying from the example file:
+Create an "application.properties" file in the back/src/main/resources by copying from the example below and make sure to complete it:
 
 ```bash
-DATABASE_URL=your_database_url_here
-DB_USERNAME=your_database_username_here
-DB_PASSWORD=your_database_password_here
-SECRET_KEY_JWT=your_jwt_secret_key_here
+server.port=8080
+
+# JWT
+jwt.secret=
+
+# Database
+spring.datasource.url=
+spring.datasource.username=
+spring.datasource.password=
+spring.jpa.hibernate.ddl-auto=update
 ```
-
-#### To make sure you use these environment variables when running the app:
-
-- Open your project in IntelliJ IDEA.
-- Go to Run > Edit Configurations…
-- Select your Spring Boot run configuration (or create a new one).
-- In the Environment variables field, click the ... button.
-- You can manually add each variable from your .env file, or if you installed the EnvFile plugin, you can select your .env file to load variables automatically.
-- Apply and save the configuration.
 
 #### 4. Launch back end
 

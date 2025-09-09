@@ -41,13 +41,14 @@ export const routes: Routes = [
     loadComponent: () => import('./features/subjects/pages/subjects-page/subjects-page.component').then(c => c.SubjectsPageComponent),
     canActivate: [AuthGuard]
   },
-
-  // Not found page
-
   {
-    path: '**',
+    path: '404',
     loadComponent: () =>
       import('./features/not-found/pages/not-found-page/not-found-page.component')
         .then(c => c.NotFoundPageComponent)
+  },
+  {
+    path: '**',
+    redirectTo: '/404'
   }
 ];
