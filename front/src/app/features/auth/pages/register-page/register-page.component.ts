@@ -117,7 +117,7 @@ export class RegisterPageComponent implements OnInit, OnDestroy {
       )
       .subscribe({
         next: (user) => {
-          if (user) this.router.navigate(['/feed']).catch(console.error);
+          if (user) this.router.navigate(['/posts']).catch(console.error);
         }
       });
   }
