@@ -15,6 +15,7 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatButtonModule } from '@angular/material/button';
 import { SubHeaderComponent } from '../../../../layout/components/sub-header/sub-header.component';
+import {SessionService} from "../../../../core/services/session.service";
 
 @Component({
   selector: 'app-login-page',
@@ -39,7 +40,8 @@ export class LoginPageComponent implements OnInit, OnDestroy {
   constructor(
     public readonly router: Router,
     private readonly formBuilder: FormBuilder,
-    private readonly authService: AuthService
+    private readonly authService: AuthService,
+    private readonly sessionService: SessionService
   ) {}
 
   ngOnInit(): void {
@@ -79,7 +81,10 @@ export class LoginPageComponent implements OnInit, OnDestroy {
         takeUntil(this.destroy$)
       )
       .subscribe(user => {
-        if (user) this.router.navigate(['/posts']).catch(console.error);
+        if (user) {
+          this.sessionService.logIn(user);
+          this.router.navigate(['/posts']).catch(console.error);
+        }
       });
 
   }

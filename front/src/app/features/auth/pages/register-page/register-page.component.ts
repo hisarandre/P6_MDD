@@ -19,6 +19,7 @@ import { MatInputModule } from '@angular/material/input';
 import { MatButtonModule } from '@angular/material/button';
 import {SubHeaderComponent} from "../../../../layout/components/sub-header/sub-header.component";
 import {passwordValidator} from "../../../../shared/validators/password.validators";
+import {SessionService} from "../../../../core/services/session.service";
 
 @Component({
   selector: 'app-register-page',
@@ -49,7 +50,8 @@ export class RegisterPageComponent implements OnInit, OnDestroy {
   constructor(
     public readonly router: Router,
     private readonly formBuilder: FormBuilder,
-    private readonly authService: AuthService
+    private readonly authService: AuthService,
+    private readonly sessionService: SessionService
   ) {}
 
   ngOnInit(): void {
@@ -102,7 +104,7 @@ export class RegisterPageComponent implements OnInit, OnDestroy {
         }),
         switchMap((token: string | null) => {
           if (!token) return of(null);
-          return this.authService.autoLogin(token).pipe(
+          return this.sessionService.autoLogin(token).pipe(
             catchError((loginError: HttpErrorResponse) => {
               this.handleLoginError(loginError);
               return of(null);

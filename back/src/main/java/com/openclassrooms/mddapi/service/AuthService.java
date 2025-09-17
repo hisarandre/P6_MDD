@@ -106,10 +106,10 @@ public class AuthService {
             throw new RuntimeException("Invalid token");
         }
 
-        String authenticatedUserEmail = jwtAuthenticationToken.getName();
+        Long authenticatedUserId = Long.valueOf(jwtAuthenticationToken.getName());
 
-        return userRepository.findByEmail(authenticatedUserEmail)
-                .orElseThrow(() -> UserNotFoundException.byEmail(authenticatedUserEmail));
+        return userRepository.findById(authenticatedUserId)
+                .orElseThrow(() -> UserNotFoundException.byId(authenticatedUserId));
     }
 
     /**
