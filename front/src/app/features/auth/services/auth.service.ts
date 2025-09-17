@@ -15,7 +15,6 @@ export class AuthService {
 
   constructor(
     private httpClient: HttpClient,
-    private sessionService: SessionService
   ) { }
 
   public register(registerRequest: RegisterRequest): Observable<string> {
@@ -29,19 +28,10 @@ export class AuthService {
       map(response => response.token),
       tap(token => localStorage.setItem('token', token)),
       switchMap(token => this.getUserProfile()),
-      tap(user => this.sessionService.logIn(user))
     );
   }
 
-  public autoLogin(token: string): Observable<User> {
-    localStorage.setItem('token', token);
-
-    return this.getUserProfile().pipe(
-      tap(user => this.sessionService.logIn(user))
-    );
-  }
-
-  private getUserProfile(): Observable<User> {
+  public getUserProfile(): Observable<User> {
     return this.httpClient.get<User>(`${this.pathService}/me`);
   }
 }

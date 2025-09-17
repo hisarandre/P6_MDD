@@ -1,6 +1,7 @@
-import { BehaviorSubject, Observable } from "rxjs";
+import {BehaviorSubject, catchError, Observable, of, tap} from "rxjs";
 import { Injectable } from "@angular/core";
 import { User } from "../interfaces/user.interface";
+import {AuthService} from "../../features/auth/services/auth.service";
 
 @Injectable({
   providedIn: 'root'
@@ -9,10 +10,11 @@ export class SessionService {
   private isLogged = false;
   private user: User | null = null;
   private isLoggedSubject = new BehaviorSubject<boolean>(this.isLogged);
-  private initialized = false;
   private initializationSubject = new BehaviorSubject<boolean>(false);
 
-  constructor() {
+  constructor(
+    private authService: AuthService
+  ) {
     this.initializeFromStorage();
   }
 
@@ -41,8 +43,12 @@ export class SessionService {
     return this.isLogged;
   }
 
-  public isInitialized(): boolean {
-    return this.initialized;
+  public autoLogin(token: string): Observable<User> {
+    localStorage.setItem('token', token);
+
+    return this.authService.getUserProfile().pipe(
+      tap(user => this.logIn(user))
+    );
   }
 
   private initializeFromStorage(): void {
@@ -50,9 +56,16 @@ export class SessionService {
     if (token) {
       this.isLogged = true;
       this.isLoggedSubject.next(true);
+
+      this.autoLogin(token).pipe(
+        catchError(err => {
+          this.logOut();
+          return of(null);
+        })
+      ).subscribe();
     }
 
-    this.initialized = true;
     this.initializationSubject.next(true);
   }
+
 }
