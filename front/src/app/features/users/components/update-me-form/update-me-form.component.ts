@@ -17,6 +17,7 @@ import { SessionService } from "../../../../core/services/session.service";
 import { UpdateUserRequest } from "../../interfaces/UpdateUserRequest.interface";
 import { User } from "../../../../core/interfaces/user.interface";
 import {passwordValidator} from "../../../../shared/validators/password.validators";
+import {MatSnackBar} from "@angular/material/snack-bar";
 
 @Component({
   selector: 'app-update-me-form',
@@ -44,6 +45,7 @@ export class UpdateMeFormComponent implements OnInit, OnDestroy {
     private readonly formBuilder: FormBuilder,
     private readonly userService: UsersService,
     private readonly sessionService: SessionService,
+    private readonly snackBar: MatSnackBar,
   ) {}
 
   ngOnInit(): void {
@@ -113,6 +115,16 @@ export class UpdateMeFormComponent implements OnInit, OnDestroy {
           if (updatedUser) {
             this.currentUser = updatedUser;
             this.sessionService.logIn(updatedUser);
+
+            this.snackBar.open(
+              'Profil mis à jour avec succès ',
+              'Fermer',
+              {
+                duration: 3000,
+                horizontalPosition: 'center',
+                verticalPosition: 'bottom',
+              }
+            );
           }
         }
       });
